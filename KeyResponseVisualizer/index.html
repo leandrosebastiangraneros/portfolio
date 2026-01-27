@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>Key Response Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="stars-canvas-container">
+        <canvas id="stars-canvas"></canvas>
+    </div>
+    <div class="atmosphere-overlay">
+        <div class="grain"></div>
+        <div class="scanlines"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="../index.html?skipBoot=true#projects" class="back-link">
+                << VOLVER A PROYECTOS</a>
+                    <h1>KEY_RESPONSE_VISUALIZER</h1>
+                    <div class="subtitle">SYSTEM // INPUT_OVR</div>
+        </header>
+        </header>
+
+        <div class="visualizer-layout">
+            <!-- LEFT COLUMN: KEY CARD -->
+            <div class="column-left">
+                <div class="key-card" id="key-card">
+                    <div class="key-display" id="key-display">?</div>
+
+                    <div class="key-data">
+                        <div class="data-group">
+                            <span class="label">EVENT.CODE</span>
+                            <span class="value" id="code-display">--</span>
+                        </div>
+                        <div class="data-group">
+                            <span class="label">EVENT.WHICH</span>
+                            <span class="value" id="which-display">--</span>
+                        </div>
+                    </div>
+
+                    <div class="status-bar">
+                        <div class="status-light" id="status-light"></div>
+                        <span id="status-text">WAITING_INPUT...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER COLUMN: KEYBOARD -->
+            <div class="column-center">
+                <div class="keyboard-container">
+                    <div class="key-row">
+                        <div class="key" data-code="Backquote">`</div>
+                        <div class="key" data-code="Digit1">1</div>
+                        <div class="key" data-code="Digit2">2</div>
+                        <div class="key" data-code="Digit3">3</div>
+                        <div class="key" data-code="Digit4">4</div>
+                        <div class="key" data-code="Digit5">5</div>
+                        <div class="key" data-code="Digit6">6</div>
+                        <div class="key" data-code="Digit7">7</div>
+                        <div class="key" data-code="Digit8">8</div>
+                        <div class="key" data-code="Digit9">9</div>
+                        <div class="key" data-code="Digit0">0</div>
+                        <div class="key" data-code="Minus">-</div>
+                        <div class="key" data-code="Equal">=</div>
+                        <div class="key key-backspace" data-code="Backspace">Backspace</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key key-tab" data-code="Tab">Tab</div>
+                        <div class="key" data-code="KeyQ">Q</div>
+                        <div class="key" data-code="KeyW">W</div>
+                        <div class="key" data-code="KeyE">E</div>
+                        <div class="key" data-code="KeyR">R</div>
+                        <div class="key" data-code="KeyT">T</div>
+                        <div class="key" data-code="KeyY">Y</div>
+                        <div class="key" data-code="KeyU">U</div>
+                        <div class="key" data-code="KeyI">I</div>
+                        <div class="key" data-code="KeyO">O</div>
+                        <div class="key" data-code="KeyP">P</div>
+                        <div class="key" data-code="BracketLeft">[</div>
+                        <div class="key" data-code="BracketRight">]</div>
+                        <div class="key key-long" data-code="Backslash">\</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key key-caps" data-code="CapsLock">Caps</div>
+                        <div class="key" data-code="KeyA">A</div>
+                        <div class="key" data-code="KeyS">S</div>
+                        <div class="key" data-code="KeyD">D</div>
+                        <div class="key" data-code="KeyF">F</div>
+                        <div class="key" data-code="KeyG">G</div>
+                        <div class="key" data-code="KeyH">H</div>
+                        <div class="key" data-code="KeyJ">J</div>
+                        <div class="key" data-code="KeyK">K</div>
+                        <div class="key" data-code="KeyL">L</div>
+                        <div class="key" data-code="Semicolon">;</div>
+                        <div class="key" data-code="Quote">'</div>
+                        <div class="key key-enter" data-code="Enter">Enter</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key key-shift-l" data-code="ShiftLeft">Shift</div>
+                        <div class="key" data-code="KeyZ">Z</div>
+                        <div class="key" data-code="KeyX">X</div>
+                        <div class="key" data-code="KeyC">C</div>
+                        <div class="key" data-code="KeyV">V</div>
+                        <div class="key" data-code="KeyB">B</div>
+                        <div class="key" data-code="KeyN">N</div>
+                        <div class="key" data-code="KeyM">M</div>
+                        <div class="key" data-code="Comma">,</div>
+                        <div class="key" data-code="Period">.</div>
+                        <div class="key" data-code="Slash">/</div>
+                        <div class="key key-shift-r" data-code="ShiftRight">Shift</div>
+                    </div>
+                    <div class="key-row">
+                        <div class="key key-ctrl" data-code="ControlLeft">Ctrl</div>
+                        <div class="key key-win" data-code="MetaLeft">Win</div>
+                        <div class="key key-alt" data-code="AltLeft">Alt</div>
+                        <div class="key key-space" data-code="Space">space</div>
+                        <div class="key key-alt" data-code="AltRight">Alt</div>
+                        <div class="key key-win" data-code="MetaRight">Win</div>
+                        <div class="key key-ctrl" data-code="ControlRight">Ctrl</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: INFO PANEL -->
+            <div class="column-right">
+                <div class="info-container">
+                    <h2 class="info-title">SISTEMA_DETECTADO</h2>
+
+                    <div class="info-block">
+                        <h3>// CÓMO FUNCIONA</h3>
+                        <p>Esta herramienta intercepta eventos de bajo nivel del teclado utilizando la API del DOM.
+                            Detecta códigos físicos de hardware (Scan Codes) independientemente del idioma configurado.
+                        </p>
+
+                        <div class="tech-badges">
+                            <span class="tech-badge">JS Events</span>
+                            <span class="tech-badge">DOM API</span>
+                            <span class="tech-badge">CSS3 Flex</span>
+                        </div>
+                    </div>
+
+                    <div class="info-block">
+                        <h3>// CÓDIGO FUENTE (JS)</h3>
+                        <div class="code-window">
+                            <div class="window-header">script.js</div>
+                            <pre><code>window.addEventListener('keydown', (e) => {
+    // Evita repetición si se mantiene pulsado
+    if (e.repeat) return;
+    
+    // Ilumina tecla visual
+    highlightKey(e.code);
+    
+    // Muestra datos
+    displayData(e.key, e.code, e.which);
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            LISTENING FOR GLOBAL KEYDOWN EVENTS
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
