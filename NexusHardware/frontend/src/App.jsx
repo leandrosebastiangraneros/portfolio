@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
 import Login from './components/Login';
+import API_URL from './config';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -20,7 +21,7 @@ function App() {
 
   const fetchProducts = () => {
     setLoading(true);
-    fetch(`http://localhost:8000/products`)
+    fetch(`${API_URL}/products`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -61,7 +62,7 @@ function App() {
     const productIds = cart.map(item => item.id);
 
     try {
-      const response = await fetch(`http://localhost:8000/checkout`, {
+      const response = await fetch(`${API_URL}/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import API_URL from '../config';
 
 const AdminPanel = ({ username }) => {
+    // ... (rest of code)
     const [stats, setStats] = useState(null);
     const [optimizationData, setOptimizationData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,8 +15,8 @@ const AdminPanel = ({ username }) => {
     const [message, setMessage] = useState('');
 
     const fetchData = () => {
-        const fetchStats = fetch(`http://localhost:8000/dashboard-stats`).then(res => res.json());
-        const fetchOptimization = fetch(`http://localhost:8000/optimization`).then(res => res.json());
+        const fetchStats = fetch(`${API_URL}/dashboard-stats`).then(res => res.json());
+        const fetchOptimization = fetch(`${API_URL}/optimization`).then(res => res.json());
 
         Promise.all([fetchStats, fetchOptimization])
             .then(([statsData, optData]) => {
@@ -35,7 +37,7 @@ const AdminPanel = ({ username }) => {
     const handleAddProduct = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:8000/products', {
+            const res = await fetch(`${API_URL}/products`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
