@@ -19,8 +19,13 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
 
+  const [isWakingUp, setIsWakingUp] = useState(false);
+
   const fetchProducts = () => {
     setLoading(true);
+    // Si tarda más de 3 segundos, mostramos mensaje de "Despertando servidor"
+    const timeout = setTimeout(() => setIsWakingUp(true), 3000);
+
     fetch(`${API_URL}/products`)
       .then(response => {
         if (!response.ok) {
@@ -31,11 +36,15 @@ function App() {
       .then(data => {
         setProducts(data);
         setLoading(false);
+        clearTimeout(timeout);
+        setIsWakingUp(false);
       })
       .catch(err => {
         console.error("Failed to fetch products:", err);
         setError("Error connecting to server. Ensure backend is running.");
         setLoading(false);
+        clearTimeout(timeout);
+        setIsWakingUp(false);
       });
   };
 
@@ -162,10 +171,23 @@ function App() {
               </div>
             )}
 
+            {isWakingUp && (
+              <div className="bg-blue-500/10 border border-blue-500 text-blue-400 px-4 py-3 rounded mb-6 flex items-center justify-center gap-3 animate-pulse">
+                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <div>
+                  <strong>Aviso:</strong> El servidor está en modo "reposo" (Capa Gratuita).
+                  <span className="block text-xs opacity-80 mt-1">Esto puede tardar unos 30-60 segundos en arrancar. Por favor espera...</span>
+                </div>
+              </div>
+            )}
+
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="text-xl text-blue-500 animate-pulse font-medium">
-                  Loading Inventory...
+                  Cargando Inventario...
                 </div>
               </div>
             ) : (

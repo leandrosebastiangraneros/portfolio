@@ -13,8 +13,12 @@ const AdminPanel = ({ username }) => {
         name: '', category: '', price: '', stock: '', image_url: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=800'
     });
     const [message, setMessage] = useState('');
+    const [isWakingUp, setIsWakingUp] = useState(false);
 
     const fetchData = () => {
+        // Timeout para detectar cold start
+        const timeout = setTimeout(() => setIsWakingUp(true), 3000);
+
         const fetchStats = fetch(`${API_URL}/dashboard-stats`).then(res => res.json());
         const fetchOptimization = fetch(`${API_URL}/optimization`).then(res => res.json());
 
@@ -23,10 +27,14 @@ const AdminPanel = ({ username }) => {
                 setStats(statsData);
                 setOptimizationData(optData);
                 setLoading(false);
+                clearTimeout(timeout);
+                setIsWakingUp(false);
             })
             .catch(err => {
                 console.error("Backend Error", err);
                 setLoading(false);
+                clearTimeout(timeout);
+                setIsWakingUp(false);
             });
     };
 
@@ -59,7 +67,23 @@ const AdminPanel = ({ username }) => {
         }
     };
 
-    if (loading) return <div className="text-center p-10 text-slate-400">Loading Dashboard...</div>;
+    if (loading) return (
+        <div className="text-center p-10 text-slate-400">
+            {isWakingUp && (
+                <div className="max-w-md mx-auto bg-blue-500/10 border border-blue-500 text-blue-400 px-4 py-3 rounded mb-6 flex items-center justify-center gap-3 animate-pulse">
+                    <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <div>
+                        <strong>Despertando Servidor...</strong>
+                        <span className="block text-xs opacity-80 mt-1">Este proceso puede tardar unos segundos en Render Free Tier.</span>
+                    </div>
+                </div>
+            )}
+            {!isWakingUp && "Cargando Dashboard..."}
+        </div>
+    );
     if (!stats) return <div className="text-center p-10 text-red-400">Error loading dashboard data.</div>;
 
     const chartData = stats.recent_transactions.map((tx) => ({
