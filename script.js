@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Efectos hover para el cursor
-    const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill-card');
+    const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill-card, .vault-item');
 
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
@@ -754,3 +754,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// --- DATA AUTOMATION DASHBOARD LOGIC ---
+function toggleDataAutomation() {
+    const dashboard = document.getElementById('data-automation-dashboard');
+    dashboard.classList.toggle('hidden-element');
+
+    if (!dashboard.classList.contains('hidden-element')) {
+        // Si se abre, iniciar la carga de datos
+        fetchDataAutomation();
+    }
+}
+
+async function fetchDataAutomation() {
+    const apiStatus = document.getElementById('api-status');
+    const tableBody = document.getElementById('stock-table-body');
+    const logConsole = document.getElementById('process-log');
+
+    apiStatus.textContent = "CONNECTING_TO_LOCALHOST:5000...";
+    apiStatus.style.color = "var(--warning-yellow)";
+
+    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">LOADING_DATA_STREAMS...</td></tr>';
+
+    // Simular escritura en consola
+    logConsole.innerHTML = "> inicializando protocolo de conexión...<br>";
+    await new Promise(r => setTimeout(r, 500));
+    logConsole.innerHTML += "> buscando servidor python local...<br>";
+
+    try {
+        // Intentar conectar con el backend real
+        const response = await fetch('http://localhost:5000/api/optimizador');
+
+        if (!response.ok) throw new Error("Server response not valid");
+
+        const data = await response.json();
+
+        logConsole.innerHTML += "> conexión exitosa. handshake validado.<br>> recibiendo datos optimizados por C-Logic...<br>";
+        apiStatus.textContent = "SYSTEM_ONLINE [LOCAL_API_V1]";
+        apiStatus.style.color = "var(--accent-green)";
+
+        renderTable(data);
+
+    } catch (error) {
+        logConsole.innerHTML += "> ERROR DE CONEXIÓN: Servidor no encontrado.<br>> activando modo demostración (datos estáticos)...<br>";
+        apiStatus.textContent = "OFFLINE_MODE [DEMO_DATA]";
+        apiStatus.style.color = "var(--accent-cyan)";
+
+        // DATOS DE FALLBACK (DEMO)
+        // Esto asegura que el reclutador vea algo lindo aunque no corra el backend
+        const demoData = [
+            { id: 1, nombre: "Teclado Mecánico (DEMO)", stock_actual: 50, sugerencia_compra: 0, estado: "✅ Stock Saludable" },
+            { id: 2, nombre: "Monitor 144hz (DEMO)", stock_actual: 10, sugerencia_compra: 35, estado: "⚠️ RESTOCK URGENTE" },
+            { id: 3, nombre: "Mouse Gamer (DEMO)", stock_actual: 200, sugerencia_compra: 0, estado: "✅ Stock Saludable" },
+            { id: 4, nombre: "GPU RTX 4090 (DEMO)", stock_actual: 2, sugerencia_compra: 15, estado: "⚠️ RESTOCK URGENTE" }
+        ];
+
+        await new Promise(r => setTimeout(r, 1000)); // Pequeña pausa dramática
+        renderTable(demoData);
+    }
+}
+
+function renderTable(data) {
+    const tableBody = document.getElementById('stock-table-body');
+    tableBody.innerHTML = '';
+
+    data.forEach(item => {
+        const row = document.createElement('tr');
+
+        // Estilo condicional para el estado
+        const statusStyle = item.sugerencia_compra > 0
+            ? 'color: #ef4444; font-weight: bold;'
+            : 'color: #22c55e;';
+
+        row.innerHTML = `
+            <td>#${String(item.id).padStart(3, '0')}</td>
+            <td>${item.nombre}</td>
+            <td>${item.stock_actual}</td>
+            <td>${item.sugerencia_compra}</td>
+            <td style="${statusStyle}">${item.estado}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}

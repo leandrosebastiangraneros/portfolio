@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
-import Dashboard from './components/Dashboard';
+import AdminPanel from './components/AdminPanel';
 import StarBackground from './components/StarBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -13,7 +13,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [view, setView] = useState('store'); // 'store' or 'dashboard'
+  const [view, setView] = useState('dashboard'); // Default to dashboard for testing
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const fetchProducts = () => {
@@ -122,7 +122,7 @@ function App() {
 
         <main className="flex-grow container mx-auto px-6 py-8">
           {view === 'dashboard' ? (
-            <Dashboard />
+            <AdminPanel />
           ) : (
             <>
               {/* Store Header Section */}

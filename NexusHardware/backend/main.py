@@ -86,3 +86,52 @@ def dashboard_stats(db: Session = Depends(get_db)):
         "sales_count": sales_count,
         "recent_sales": recent_sales
     }
+
+# --- C INTEGRATION ---
+# --- C INTEGRATION MOCK (NO COMPILER FOUND) ---
+# En un entorno de producción, esto cargaría el DLL compilado.
+# Como no hay GCC en este entorno Windows, usamos una simulación de alta fidelidad.
+
+def simular_motor_c(ventas_mes, tiempo_entrega, stock_actual):
+    # Lógica que replicaba el C:
+    # Si stock_actual < (ventas_mes / 30 * tiempo_entrega) + SafetyStock se sugiere compra
+    venta_diaria = ventas_mes / 30
+    stock_seguridad = venta_diaria * 3 # 3 días de seguridad
+    necesidad_total = (venta_diaria * tiempo_entrega) + stock_seguridad
+    
+    if stock_actual < necesidad_total:
+        return int(necesidad_total - stock_actual)
+    return 0
+
+motor_c = "SIMULATION_MODE" # Flag para indicar que está activo
+
+@app.get("/optimization")
+def get_optimization(db: Session = Depends(get_db)):
+    products = db.query(models.Product).all()
+    results = []
+    
+    for prod in products:
+        # Simulamos datos que aun no estan en el modelo Product para esta demo
+        # En un futuro agregariamos columnas reales a la tabla
+        ventas_mes = 30 # Dummy average
+        tiempo_entrega = 7 # Dummy days
+        
+        # Logica mejorada si el nombre sugiere alta rotacion
+        if "RTX" in prod.name or "Mouse" in prod.name:
+            ventas_mes = 120
+            tiempo_entrega = 14
+            
+        sugerencia = simular_motor_c(ventas_mes, tiempo_entrega, int(prod.stock))
+
+            
+        results.append({
+            "id": prod.id,
+            "name": prod.name,
+            "stock": prod.stock,
+            "sales_avg": ventas_mes,
+            "lead_time": tiempo_entrega,
+            "restock_suggestion": sugerencia,
+            "status": "CRITICAL" if sugerencia > 0 else "OK"
+        })
+        
+    return results

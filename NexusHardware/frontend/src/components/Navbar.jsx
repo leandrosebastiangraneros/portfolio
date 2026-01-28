@@ -3,7 +3,7 @@ import React from 'react';
 const Navbar = ({ currentView, onViewChange, cartCount, toggleCart }) => {
     const handleBackToProjects = () => {
         // Always force navigation to Portfolio with skipBoot param to ensure animation skip
-        window.location.href = 'https://leandrosebastiangraneros.github.io/portfolio/index.html?skipBoot=true#projects';
+        window.location.href = '../../../index.html?skipBoot=true#projects';
     };
 
     return (
