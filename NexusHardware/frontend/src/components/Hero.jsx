@@ -1,53 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const Hero = () => {
-    const [offset, setOffset] = useState(0);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setOffset(window.scrollY);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     return (
-        <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-            {/* Background elements moving with scroll for parallax */}
-            <div
-                className="absolute inset-0 z-0 flex items-center justify-center opacity-30 select-none pointer-events-none"
-                style={{ transform: `translateY(${offset * 0.5}px)` }}
-            >
-                <div className="w-[60vw] h-[60vw] rounded-full bg-accent-purple/20 blur-[100px] animate-pulse"></div>
+        <div className="relative py-20 lg:py-32 flex flex-col items-center justify-center text-center px-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-500/10 rounded-full blur-[120px]"></div>
             </div>
 
-            <div className="relative z-10 text-center px-4">
-                <div className="inline-block mb-4 px-3 py-1 border border-accent-cyan/30 rounded-full bg-accent-cyan/10 backdrop-blur-sm text-accent-cyan text-xs font-mono tracking-[0.2em] animate-fade-in-up">
-                    SYSTEM_ONLINE // V.2.0.4
+            <div className="relative z-10 max-w-4xl mx-auto">
+                <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
+                    Next Generation Performance
                 </div>
 
-                <h1 className="text-4xl md:text-8xl font-black font-display text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-500 mb-6 tracking-tighter drop-shadow-2xl animate-fade-in-up delay-100">
-                    NEXT GEN <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-cyan">HARDWARE</span>
+                <h1 className="text-5xl md:text-7xl font-bold text-slate-50 mb-6 tracking-tight leading-tight">
+                    Premium Hardware for <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Elite Computing</span>
                 </h1>
 
-                <p className="max-w-xl mx-auto text-gray-400 font-mono text-sm md:text-base leading-relaxed mb-10 animate-fade-in-up delay-200">
-                    Upgrade your reality. High-performance components for elite systems.
-                    Validated for maximum overclocking potential.
+                <p className="max-w-2xl mx-auto text-slate-400 text-lg mb-10 leading-relaxed">
+                    Discover verified components for high-end workstations and gaming rigs.
+                    Optimized inventory management with smart analytics.
                 </p>
 
-                <div className="flex justify-center gap-6 animate-fade-in-up delay-300">
-                    <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="px-8 py-3 bg-white text-black font-bold tracking-wider hover:bg-accent-cyan hover:scale-105 transition duration-300 rounded-sm">
-                        EXPLORE_INVENTORY
+                <div className="flex justify-center gap-4">
+                    <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/25">
+                        Browse Store
+                    </button>
+                    <button className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg border border-slate-700 transition-all">
+                        View Specs
                     </button>
                 </div>
-            </div>
-
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
             </div>
         </div>
     );

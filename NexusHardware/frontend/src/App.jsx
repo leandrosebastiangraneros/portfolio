@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
 import AdminPanel from './components/AdminPanel';
-import StarBackground from './components/StarBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
+import Login from './components/Login';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -13,12 +13,14 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [view, setView] = useState('dashboard'); // Default to dashboard for testing
+  const [view, setView] = useState('store');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
 
   const fetchProducts = () => {
     setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL}/products`)
+    fetch(`http://localhost:8000/products`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -31,7 +33,7 @@ function App() {
       })
       .catch(err => {
         console.error("Failed to fetch products:", err);
-        setError("Error de Conexión con el Servidor");
+        setError("Error connecting to server. Ensure backend is running.");
         setLoading(false);
       });
   };
@@ -45,9 +47,7 @@ function App() {
   const addToCart = (product) => {
     setCart([...cart, product]);
     setIsCartOpen(true);
-
-    // Auto-close cart after 3 seconds for smoother UX (optional, but professional)
-    setTimeout(() => setIsCartOpen(false), 4000);
+    setTimeout(() => setIsCartOpen(false), 3000);
   };
 
   const removeFromCart = (index) => {
@@ -61,7 +61,7 @@ function App() {
     const productIds = cart.map(item => item.id);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/checkout`, {
+      const response = await fetch(`http://localhost:8000/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,13 +71,13 @@ function App() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Error en la compra');
+        throw new Error(errorData.detail || 'Purchase failed');
       }
 
       const data = await response.json();
-      alert(`¡Compra Exitosa! ${data.message || ''}`);
+      alert(`Purchase Successful! ${data.message || ''}`);
       setCart([]);
-      fetchProducts(); // Refresh stock
+      fetchProducts();
     } catch (err) {
       alert(`Error: ${err.message}`);
     } finally {
@@ -85,100 +85,105 @@ function App() {
     }
   };
 
-  return (
-    <>
-      <StarBackground />
-      <div className="atmosphere-overlay">
-        <div className="grain"></div>
-        <div className="scanlines"></div>
-      </div>
+  const handleLogin = (user) => {
+    setIsAuthenticated(true);
+    setUsername(user);
+    setView('dashboard');
+  };
 
-      <div className="min-h-screen relative z-10 font-main text-gray-100 flex flex-col">
+  // Guardia de Autenticación para el Dashboard
+  useEffect(() => {
+    if (view === 'dashboard' && !isAuthenticated) {
+      // Si intento acceder al dashboard sin autenticación, ¿me quedo en la tienda o muestro el login?
+      // Para este flujo, dejo que la lógica de renderizado maneje mostrar el componente Login
+    }
+  }, [view, isAuthenticated]);
+
+  if (view === 'dashboard' && !isAuthenticated) {
+    return (
+      <>
         <Navbar
           currentView={view}
           onViewChange={setView}
           cartCount={cart.length}
           toggleCart={() => setIsCartOpen(!isCartOpen)}
         />
+        <Login onLogin={handleLogin} />
+      </>
+    )
+  }
 
-        {/* Floating Cart Modal / Slide-over */}
-        {isCartOpen && (
-          <div className="relative z-50">
-            <Cart
-              cartItems={cart}
-              onCheckout={handleCheckout}
-              onRemove={removeFromCart}
-              checkoutDisabled={checkoutLoading}
-            />
-            {/* Backdrop for cart close */}
-            <div
-              className="fixed inset-0"
-              onClick={() => setIsCartOpen(false)}
-            ></div>
-          </div>
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-50 font-sans flex flex-col">
+      <Navbar
+        currentView={view}
+        onViewChange={setView}
+        cartCount={cart.length}
+        toggleCart={() => setIsCartOpen(!isCartOpen)}
+      />
+
+      {/* Modal del Carrito */}
+      {isCartOpen && (
+        <div className="relative z-50">
+          <Cart
+            cartItems={cart}
+            onCheckout={handleCheckout}
+            onRemove={removeFromCart}
+            checkoutDisabled={checkoutLoading}
+          />
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setIsCartOpen(false)}
+          ></div>
+        </div>
+      )}
+
+      {view === 'store' && <Hero />}
+
+      <main className="flex-grow container mx-auto px-6 py-8">
+        {view === 'dashboard' ? (
+          <AdminPanel username={username} />
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700">
+              <h2 className="text-3xl font-bold text-slate-100">
+                Latest Arrivals
+              </h2>
+              <div className="text-sm text-slate-400">
+                Showing {products.length} products
+              </div>
+            </div>
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded mb-6 text-center">
+                <strong>Error: </strong>
+                {error}
+              </div>
+            )}
+
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="text-xl text-blue-500 animate-pulse font-medium">
+                  Loading Inventory...
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {products.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onAddToCart={() => addToCart(product)}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
+      </main>
 
-        {view === 'store' && <Hero />}
-
-        <main className="flex-grow container mx-auto px-6 py-8">
-          {view === 'dashboard' ? (
-            <AdminPanel />
-          ) : (
-            <>
-              {/* Store Header Section */}
-              {view === 'store' && (
-                <div className="flex items-center justify-between mb-12 border-b border-white/10 pb-4">
-                  <h2 className="text-2xl font-display font-bold tracking-widest text-white">
-                    LATEST_ARRIVALS
-                  </h2>
-                  <div className="text-xs font-mono text-gray-500">
-                    SHOWING {products.length} UNITS
-                  </div>
-                </div>
-              )}
-
-              {error && (
-                <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded relative mb-6 text-center backdrop-blur-md" role="alert">
-                  <strong className="font-bold">SYSTEM_ERROR: </strong>
-                  <span className="block sm:inline">{error}</span>
-                </div>
-              )}
-
-              {loading ? (
-                <div className="flex justify-center items-center h-64">
-                  <div className="text-2xl text-accent-purple animate-pulse font-mono flex items-center gap-3">
-                    <span className="inline-block w-3 h-3 bg-accent-purple rounded-full animate-bounce"></span>
-                    LOADING_INVENTORY...
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                  {products.map(product => (
-                    <div key={product.id} className="relative group">
-                      <ProductCard
-                        name={product.name}
-                        price={product.price}
-                        category={product.category}
-                        image_url={product.image_url}
-                        onAddToCart={() => addToCart(product)}
-                      />
-                      {/* Stock Badge */}
-                      <div className="absolute top-4 left-4 z-20">
-                        <span className={`px-2 py-1 text-[10px] font-mono font-bold rounded-sm border ${product.stock > 0 ? 'bg-black/80 border-green-500/50 text-green-400' : 'bg-red-900/80 border-red-500 text-red-200'}`}>
-                          {product.stock > 0 ? `STOCK: ${product.stock}` : 'OUT_OF_STOCK'}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </main>
-
-        <Footer />
-      </div>
-    </>
+      <Footer />
+    </div>
   );
 }
 

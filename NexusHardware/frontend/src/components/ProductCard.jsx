@@ -1,29 +1,45 @@
 import React from 'react';
 
-const ProductCard = ({ name, price, category, image_url, onAddToCart }) => {
+const ProductCard = ({ name, price, category, image_url, onAddToCart, product }) => {
+    // Manejo las props actualizadas si se pasan como objeto completo product o props individuales
+    const pName = product?.name || name;
+    const pPrice = product?.price || price;
+    const pCategory = product?.category || category;
+    const pImg = product?.image_url || image_url;
+    const pStock = product?.stock !== undefined ? product.stock : 10; // Fallback stock
+
     return (
-        <div className="bg-black/40 backdrop-blur-md border border-accent-purple/50 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(157,78,221,0.1)] transform transition duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(157,78,221,0.3)] group">
-            <div className="h-48 overflow-hidden relative">
+        <div className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+            <div className="relative h-48 overflow-hidden bg-slate-900">
                 <img
-                    src={image_url}
-                    alt={name}
-                    className="w-full h-full object-cover transition duration-500 group-hover:scale-110"
+                    src={pImg}
+                    alt={pName}
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition duration-500"
+                    onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200?text=No+Image' }}
                 />
-                <div className="absolute top-0 right-0 bg-accent-purple text-white text-xs font-bold px-2 py-1 rounded-bl-lg font-mono tracking-wider">
-                    {category}
+                <div className="absolute top-2 right-2 bg-slate-900/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-300">
+                    {pCategory}
                 </div>
+                {pStock === 0 && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
+                        <span className="text-red-500 font-bold border-2 border-red-500 px-4 py-2 rounded rotate-12 uppercase tracking-wider">Out of Stock</span>
+                    </div>
+                )}
             </div>
-            <div className="p-4">
-                <h3 className="text-xl font-bold text-white mb-2 truncate font-display tracking-wide" title={name}>{name}</h3>
-                <div className="flex justify-between items-center mt-4">
-                    <span className="text-accent-cyan font-mono text-xl font-bold shadow-cyan-glow">
-                        ${price.toFixed(2)}
-                    </span>
+
+            <div className="p-5 flex flex-col flex-grow">
+                <h3 className="text-lg font-bold text-slate-100 mb-1 leading-tight">{pName}</h3>
+                <div className="flex justify-between items-end mt-auto pt-4">
+                    <span className="text-2xl font-bold text-blue-400">${Number(pPrice).toFixed(2)}</span>
                     <button
-                        onClick={() => onAddToCart({ name, price, id: Date.now() })}
-                        className="bg-accent-purple/20 hover:bg-accent-purple text-accent-cyan hover:text-white border border-accent-purple hover:border-transparent font-bold py-1 px-4 rounded transition duration-200 font-mono tracking-wider"
+                        onClick={onAddToCart}
+                        disabled={pStock === 0}
+                        className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${pStock > 0
+                            ? 'bg-blue-600 hover:bg-blue-500 text-white'
+                            : 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                            }`}
                     >
-                        ADD_TO_CART
+                        {pStock > 0 ? 'Add to Cart' : 'Sold Out'}
                     </button>
                 </div>
             </div>

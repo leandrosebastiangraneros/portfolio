@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean
 from sqlalchemy.sql import func
 from database import Base
 
@@ -16,6 +16,15 @@ class Sale(Base):
     __tablename__ = "sales"
 
     id = Column(Integer, primary_key=True, index=True)
+    transaction_id = Column(String, index=True) # Agrego este campo para agrupar items en una sola transacción
     product_name = Column(String)
     sale_price = Column(Float)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    is_active = Column(Boolean, default=True)
