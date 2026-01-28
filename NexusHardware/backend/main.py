@@ -18,7 +18,12 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*"
+        "http://localhost:5173",  # Vite Dev
+        "http://localhost:5500",  # VS Code Live Server
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5500",
+        "https://leandrosebastiangraneros.github.io", # GitHub Pages
+        "https://nexus-hardware-api.onrender.com"     # Render Backend (self)
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -63,9 +68,15 @@ def seed_data(db: Session):
         products = [
             models.Product(name="RTX 4090", category="GPU", price=1599.99, stock=10, image_url="https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=800"),
             models.Product(name="Ryzen 7 7800X3D", category="CPU", price=449.00, stock=20, image_url="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&q=80&w=800"),
-            models.Product(name="Mechanical Keyboard", category="Peripherals", price=129.50, stock=50, image_url="https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=800"),
-            models.Product(name="Gaming Mouse", category="Peripherals", price=59.99, stock=100, image_url="https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="Mechanical Keyboard", category="PERIFERICOS", price=129.50, stock=50, image_url="https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="Gaming Mouse", category="PERIFERICOS", price=59.99, stock=100, image_url="https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&q=80&w=800"),
             models.Product(name="32GB DDR5 RAM", category="RAM", price=110.00, stock=30, image_url="https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="ASUS ROG Strix B650", category="MOTHERBOARD", price=239.99, stock=15, image_url="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="NZXT Kraken 240", category="REFRIGERACION", price=139.99, stock=25, image_url="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="Samsung 990 Pro 2TB", category="ALMACENAMIENTO", price=169.99, stock=40, image_url="https://images.unsplash.com/photo-1597872250969-bc5a2a458311?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="Corsair RM850x", category="FUENTE", price=149.99, stock=20, image_url="https://plus.unsplash.com/premium_photo-1682126104327-b7d620587d60?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="Lian Li O11 Dynamic", category="GABINETE", price=159.99, stock=10, image_url="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&q=80&w=800"),
+            models.Product(name="LG Ultragear 27GB", category="MONITOR", price=349.99, stock=15, image_url="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=800"),
         ]
         db.add_all(products)
         db.commit()

@@ -9,7 +9,7 @@ __pycache__/
 venv/
 env/
 .env
-nexus.db
+*.db
 
 # Node / Web
 node_modules/

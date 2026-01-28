@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
 import AdminPanel from './components/AdminPanel';
+import PCBuilder from './components/PCBuilder';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Footer from './components/Footer';
@@ -55,7 +56,7 @@ function App() {
   }, [view]);
 
   const addToCart = (product) => {
-    setCart([...cart, product]);
+    setCart(currentCart => [...currentCart, product]);
     setIsCartOpen(true);
     setTimeout(() => setIsCartOpen(false), 3000);
   };
@@ -153,6 +154,8 @@ function App() {
       <main className="flex-grow container mx-auto px-6 py-8">
         {view === 'dashboard' ? (
           <AdminPanel username={username} />
+        ) : view === 'builder' ? (
+          <PCBuilder onAddToCart={addToCart} />
         ) : (
           <>
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700">

@@ -44,26 +44,41 @@ const AdminPanel = ({ username }) => {
 
     const handleAddProduct = async (e) => {
         e.preventDefault();
+        console.log("Intentando agregar producto:", newProduct); // DEBUG
+
         try {
+            const payload = {
+                ...newProduct,
+                price: parseFloat(newProduct.price),
+                stock: parseInt(newProduct.stock)
+            };
+            console.log("Payload enviado:", payload); // DEBUG
+
             const res = await fetch(`${API_URL}/products`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...newProduct,
-                    price: parseFloat(newProduct.price),
-                    stock: parseInt(newProduct.stock)
-                })
+                body: JSON.stringify(payload)
             });
+
+            console.log("Respuesta status:", res.status); // DEBUG
+
             if (res.ok) {
+                const data = await res.json();
+                console.log("Producto agregado:", data); // DEBUG
                 setMessage('Product added successfully!');
                 setNewProduct({ name: '', category: '', price: '', stock: '', image_url: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=800' });
                 fetchData(); // Refresh data
                 setTimeout(() => setMessage(''), 3000);
             } else {
-                setMessage('Failed to add product');
+                const errData = await res.json();
+                console.error("Error del backend:", errData);
+                setMessage(`Failed: ${errData.detail || 'Unknown error'}`);
+                alert(`Error al guardar: ${JSON.stringify(errData)}`); // Alertar visiblemente
             }
         } catch (error) {
-            setMessage('Error connecting to server');
+            console.error("Error de red/fetch:", error);
+            setMessage(`Error connecting to server: ${error.message}`);
+            alert(`Error de conexión: ${error.message}`);
         }
     };
 
@@ -114,7 +129,17 @@ const AdminPanel = ({ username }) => {
             // Info
             doc.setFontSize(10);
             doc.text(`Transaction ID: ${data.id}`, 14, 40);
-            doc.text(`Date: ${new Date(data.date).toLocaleString()}`, 14, 46);
+
+            // Obtengo la fecha en zona horaria de Argentina
+            const dateOptions = {
+                timeZone: 'America/Argentina/Buenos_Aires',
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false
+            };
+            const argentinaDate = new Intl.DateTimeFormat('es-AR', dateOptions).format(new Date(data.date));
+
+            doc.text(`Fecha: ${argentinaDate} (ARG)`, 14, 46);
 
             // Table
             autoTable(doc, {
@@ -207,9 +232,34 @@ const AdminPanel = ({ username }) => {
                             </div>
                         </div>
                         <div>
-                            <label className="block text-slate-400 text-xs mb-1">Image URL</label>
-                            <input required type="text" className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white focus:border-blue-500 outline-none"
-                                value={newProduct.image_url} onChange={e => setNewProduct({ ...newProduct, image_url: e.target.value })} />
+                            <label className="block text-slate-400 text-xs mb-1">Imagen del Producto</label>
+                            {/* Input de Archivo en lugar de URL */}
+                            <input
+                                required
+                                type="file"
+                                accept="image/*"
+                                className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white focus:border-blue-500 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        // Validar tamaño (ej: max 1MB para no saturar BD)
+                                        if (file.size > 1024 * 1024) {
+                                            alert("La imagen es muy pesada. Máximo 1MB.");
+                                            return;
+                                        }
+
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setNewProduct({ ...newProduct, image_url: reader.result });
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                            />
+                            {/* Preview de la imagen si existe */}
+                            {newProduct.image_url && !newProduct.image_url.includes('unsplash') && (
+                                <img src={newProduct.image_url} alt="Preview" className="mt-2 h-20 w-20 object-cover rounded border border-slate-600" />
+                            )}
                         </div>
                         <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded transition-colors">
                             Add to Inventory

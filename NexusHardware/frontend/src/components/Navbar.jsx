@@ -41,6 +41,15 @@ const Navbar = ({ currentView, onViewChange, cartCount, toggleCart }) => {
                     >
                         Dashboard
                     </button>
+                    <button
+                        onClick={() => onViewChange('builder')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${currentView === 'builder'
+                            ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/20'
+                            : 'text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10'
+                            }`}
+                    >
+                        Arma tu PC
+                    </button>
                 </div>
 
                 {/* Acciones */}
