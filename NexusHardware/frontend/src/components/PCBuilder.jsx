@@ -122,7 +122,7 @@ const PCBuilder = ({ onAddToCart }) => {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-slate-200 text-sm mb-1">{product.name}</h4>
-                                            <p className="text-blue-400 font-mono font-bold">${product.price}</p>
+                                            <p className="text-blue-400 font-mono font-bold">${product.price.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</p>
                                         </div>
                                         {selection[activeCategory]?.id === product.id && (
                                             <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
@@ -172,7 +172,7 @@ const PCBuilder = ({ onAddToCart }) => {
                                     {selection[cat.id] ? (
                                         <div className="flex justify-between items-center group">
                                             <span className="text-slate-200 font-medium truncate pr-2" title={selection[cat.id].name}>{selection[cat.id].name}</span>
-                                            <span className="text-emerald-400 font-mono text-xs">${selection[cat.id].price}</span>
+                                            <span className="text-emerald-400 font-mono text-xs">${selection[cat.id].price.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</span>
                                         </div>
                                     ) : (
                                         <span className="text-slate-600 italic text-xs">- Pendiente -</span>
@@ -184,7 +184,7 @@ const PCBuilder = ({ onAddToCart }) => {
                         <div className="border-t border-slate-700 pt-4 mb-6 sticky bottom-0 bg-slate-800 pb-2">
                             <div className="flex justify-between items-center mb-2">
                                 <span className="text-slate-400">Total Estimado</span>
-                                <span className="text-3xl font-bold text-emerald-400">${totalPrice.toFixed(2)}</span>
+                                <span className="text-3xl font-bold text-emerald-400">${totalPrice.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</span>
                             </div>
                         </div>
 

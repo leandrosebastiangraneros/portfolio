@@ -33,7 +33,7 @@ const Login = ({ onLogin }) => {
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="bg-slate-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-slate-700">
                 <h2 className="text-3xl font-bold text-white mb-6 text-center">Nexus Hardware</h2>
-                <h3 className="text-xl text-slate-300 mb-6 text-center">Login</h3>
+                <h3 className="text-xl text-slate-300 mb-6 text-center">Iniciar Sesión</h3>
 
                 {error && (
                     <div className="bg-red-500/10 border border-red-500 text-red-400 p-3 rounded mb-4 text-sm">
@@ -43,30 +43,30 @@ const Login = ({ onLogin }) => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-slate-400 mb-1 text-sm">Username</label>
+                        <label className="block text-slate-400 mb-1 text-sm">Usuario</label>
                         <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                            placeholder="Enter username"
+                            placeholder="Usuario"
                         />
                     </div>
                     <div>
-                        <label className="block text-slate-400 mb-1 text-sm">Password</label>
+                        <label className="block text-slate-400 mb-1 text-sm">Contraseña</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                            placeholder="Enter password"
+                            placeholder="Contraseña"
                         />
                     </div>
                     <button
                         type="submit"
                         className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded transition-colors"
                     >
-                        Sign In
+                        Entrar
                     </button>
                 </form>
                 <div className="mt-4 text-center text-xs text-slate-500">

@@ -13,26 +13,26 @@ const Footer = () => {
                             </h2>
                         </div>
                         <p className="text-gray-500 text-sm font-mono max-w-xs leading-relaxed">
-                            Premium hardware components for the next generation of computing.
-                            Secure transactions. Global shipping.
+                            Componentes de hardware premium para la próxima generación de computación.
+                            Transacciones seguras. Envíos globales.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-white font-bold font-display tracking-wider mb-4">EXPLORE</h3>
+                        <h3 className="text-white font-bold font-display tracking-wider mb-4">EXPLORAR</h3>
                         <ul className="space-y-2 text-sm text-gray-500 font-mono">
-                            <li className="hover:text-accent-cyan cursor-pointer transition">GPU_SERIES</li>
-                            <li className="hover:text-accent-cyan cursor-pointer transition">CPU_ARCH</li>
-                            <li className="hover:text-accent-cyan cursor-pointer transition">MEMORY_MODS</li>
-                            <li className="hover:text-accent-cyan cursor-pointer transition">PERIPHERALS</li>
+                            <li className="hover:text-accent-cyan cursor-pointer transition">SERIES_GPU</li>
+                            <li className="hover:text-accent-cyan cursor-pointer transition">ARQ_CPU</li>
+                            <li className="hover:text-accent-cyan cursor-pointer transition">MODS_MEMORIA</li>
+                            <li className="hover:text-accent-cyan cursor-pointer transition">PERIFERICOS</li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="text-white font-bold font-display tracking-wider mb-4">SYSTEM</h3>
+                        <h3 className="text-white font-bold font-display tracking-wider mb-4">SISTEMA</h3>
                         <ul className="space-y-2 text-sm text-gray-500 font-mono">
-                            <li className="hover:text-accent-purple cursor-pointer transition">ADMIN_LOGIN</li>
-                            <li className="hover:text-accent-purple cursor-pointer transition">STATUS_PAGE</li>
+                            <li className="hover:text-accent-purple cursor-pointer transition">LOGIN_ADMIN</li>
+                            <li className="hover:text-accent-purple cursor-pointer transition">ESTADO_PAGINA</li>
                             <li className="hover:text-accent-purple cursor-pointer transition">DOCS_API</li>
                         </ul>
                     </div>
@@ -40,7 +40,7 @@ const Footer = () => {
 
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-xs text-gray-600 font-mono">
-                        © 2026 NEXUS HARDWARE. ALL RIGHTS RESERVED.
+                        © 2026 NEXUS HARDWARE. TODOS LOS DERECHOS RESERVADOS.
                     </p>
                     <div className="flex gap-4">
                         {/* Social Icons Mockup */}

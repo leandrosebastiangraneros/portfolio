@@ -30,7 +30,7 @@ const Navbar = ({ currentView, onViewChange, cartCount, toggleCart }) => {
                             : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                             }`}
                     >
-                        Store
+                        Tienda
                     </button>
                     <button
                         onClick={() => onViewChange('dashboard')}
@@ -39,7 +39,7 @@ const Navbar = ({ currentView, onViewChange, cartCount, toggleCart }) => {
                             : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                             }`}
                     >
-                        Dashboard
+                        Panel
                     </button>
                     <button
                         onClick={() => onViewChange('builder')}
@@ -72,7 +72,7 @@ const Navbar = ({ currentView, onViewChange, cartCount, toggleCart }) => {
                         onClick={handleBackToProjects}
                         className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
                     >
-                        <span>Exit</span>
+                        <span>Salir</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>

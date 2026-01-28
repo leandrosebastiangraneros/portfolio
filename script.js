@@ -782,21 +782,22 @@ async function fetchDataAutomation() {
     logConsole.innerHTML += "> buscando servidor python local...<br>";
 
     try {
-        // Intentar conectar con el backend real
-        const response = await fetch('http://localhost:5000/api/optimizador');
+        // Intentar conectar con el backend real de Nexus Hardware (Port 8000)
+        const response = await fetch('http://localhost:8000/optimization');
 
         if (!response.ok) throw new Error("Server response not valid");
 
         const data = await response.json();
 
         logConsole.innerHTML += "> conexión exitosa. handshake validado.<br>> recibiendo datos optimizados por C-Logic...<br>";
-        apiStatus.textContent = "SYSTEM_ONLINE [LOCAL_API_V1]";
+        apiStatus.textContent = "SYSTEM_ONLINE [NEXUS_CORE_V1]";
         apiStatus.style.color = "var(--accent-green)";
 
         renderTable(data);
 
     } catch (error) {
-        logConsole.innerHTML += "> ERROR DE CONEXIÓN: Servidor no encontrado.<br>> activando modo demostración (datos estáticos)...<br>";
+        console.error("Fetch Error:", error);
+        logConsole.innerHTML += `> ERROR DE CONEXIÓN: ${error.message}<br>> activando modo demostración (datos estáticos)...<br>`;
         apiStatus.textContent = "OFFLINE_MODE [DEMO_DATA]";
         apiStatus.style.color = "var(--accent-cyan)";
 

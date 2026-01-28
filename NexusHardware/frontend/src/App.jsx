@@ -86,7 +86,7 @@ function App() {
       }
 
       const data = await response.json();
-      alert(`Purchase Successful! ${data.message || ''}`);
+      alert(`¡Compra Exitosa! ${data.message || ''}`);
       setCart([]);
       fetchProducts();
     } catch (err) {
@@ -160,10 +160,10 @@ function App() {
           <>
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700">
               <h2 className="text-3xl font-bold text-slate-100">
-                Latest Arrivals
+                Últimos Ingresos
               </h2>
               <div className="text-sm text-slate-400">
-                Showing {products.length} products
+                Mostrando {products.length} productos
               </div>
             </div>
 

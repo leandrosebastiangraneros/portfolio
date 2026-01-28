@@ -20,10 +20,10 @@ En el backend (`main.py`), la configuración de CORS estaba establecida en `allo
 **Solución Aplicada:**
 He reescrito la configuración de seguridad del backend para eliminar el comodín (`*`) y establecer una "Lista Blanca" estricta.
 - **Acceso Permitido Solo A:**
-  1. `localhost:5173` (Tu entorno de desarrollo Vite)
-  2. `localhost:5500` (Tu entorno Live Server)
+  1. `localhost:5173` (entorno de desarrollo Vite)
+  2. `localhost:5500` (entorno Live Server)
   3. `127.0.0.1` (Alternativa local)
-  4. `leandrosebastiangraneros.github.io` (Tu frontend oficial en producción)
+  4. `leandrosebastiangraneros.github.io` (frontend oficial en producción)
   5. `nexus-hardware-api.onrender.com` (El propio backend)
 - **Resultado:** El servidor ahora rechazará automáticamente cualquier conexión que no provenga de estas fuentes confiables.
 

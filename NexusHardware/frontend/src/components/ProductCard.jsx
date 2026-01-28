@@ -30,7 +30,7 @@ const ProductCard = ({ name, price, category, image_url, onAddToCart, product })
             <div className="p-5 flex flex-col flex-grow">
                 <h3 className="text-lg font-bold text-slate-100 mb-1 leading-tight">{pName}</h3>
                 <div className="flex justify-between items-end mt-auto pt-4">
-                    <span className="text-2xl font-bold text-blue-400">${Number(pPrice).toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-blue-400">${Number(pPrice).toLocaleString('es-AR', { minimumFractionDigits: 2 })}</span>
                     <button
                         onClick={onAddToCart}
                         disabled={pStock === 0}
@@ -39,7 +39,7 @@ const ProductCard = ({ name, price, category, image_url, onAddToCart, product })
                             : 'bg-slate-700 text-slate-500 cursor-not-allowed'
                             }`}
                     >
-                        {pStock > 0 ? 'Add to Cart' : 'Sold Out'}
+                        {pStock > 0 ? 'Agregar' : 'Agotado'}
                     </button>
                 </div>
             </div>
