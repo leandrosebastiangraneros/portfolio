@@ -13,7 +13,7 @@ nexus.db
 
 # Node / Web
 node_modules/
-dist/
+# dist/
 dist-ssr/
 *.local
 npm-debug.log*
