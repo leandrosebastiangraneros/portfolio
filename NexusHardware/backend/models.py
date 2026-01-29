@@ -20,6 +20,7 @@ class Sale(Base):
     product_name = Column(String)
     sale_price = Column(Float)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+    purchase_type = Column(String, default="INDIVIDUAL")
 
 class User(Base):
     __tablename__ = "users"

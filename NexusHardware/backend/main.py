@@ -19,8 +19,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # Vite Dev
+        "http://localhost:5174",  # Vite Dev Alternate
         "http://localhost:5500",  # VS Code Live Server
         "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
         "http://127.0.0.1:5500",
         "https://leandrosebastiangraneros.github.io", # GitHub Pages
         "https://nexus-hardware-api.onrender.com"     # Render Backend (self)
@@ -33,6 +35,7 @@ app.add_middleware(
 # Defino los Modelos Pydantic para validación de datos
 class Order(BaseModel):
     product_ids: List[int]
+    purchase_type: str = "INDIVIDUAL"
 
 class UserLogin(BaseModel):
     username: str
@@ -158,7 +161,8 @@ def checkout(order: Order, db: Session = Depends(get_db)):
         sale = models.Sale(
             transaction_id=transaction_id,
             product_name=product.name, 
-            sale_price=product.price
+            sale_price=product.price,
+            purchase_type=order.purchase_type
         )
         db.add(sale)
     
@@ -195,13 +199,19 @@ def dashboard_stats(db: Session = Depends(get_db)):
         # Obtengo todos los items para esta transacción
         items = db.query(models.Sale).filter(models.Sale.transaction_id == tx_id).all()
         total_value = sum(item.sale_price for item in items)
-        product_names = [item.product_name for item in items]
+        
+        # Determine purchase type from the first item (should be same for all in tx)
+        tx_type = items[0].purchase_type if items else "INDIVIDUAL"
+        
+        # Detailed products list
+        detailed_products = [{"name": item.product_name, "price": item.sale_price} for item in items]
         
         recent_transactions.append({
             "transaction_id": tx_id,
             "total_value": total_value,
             "timestamp": timestamp,
-            "products": product_names,
+            "products": detailed_products,
+            "purchase_type": tx_type,
             "items_count": len(items)
         })
     

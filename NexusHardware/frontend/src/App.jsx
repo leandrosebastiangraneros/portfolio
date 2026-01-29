@@ -12,6 +12,7 @@ import API_URL from './config';
 function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [cartSource, setCartSource] = useState('INDIVIDUAL');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -55,8 +56,20 @@ function App() {
     }
   }, [view]);
 
-  const addToCart = (product) => {
+  const addToCart = (product, source = 'INDIVIDUAL') => {
     setCart(currentCart => [...currentCart, product]);
+    if (cart.length === 0) {
+      setCartSource(source);
+    } else if (cartSource !== source) {
+      // If mixing sources, default to INDIVIDUAL or keep as is? 
+      // User request suggests distinguishing. Let's prioritize Builder if purely builder, otherwise individual.
+      // Easiest is: if ANY item is INDIVIDUAL, it becomes INDIVIDUAL. Only if ALL are BUILDER it is BUILDER.
+      // But for simplicity, I'll update source to 'MIXTO' or just overwrite.
+      // Let's assume the user builds a PC -> Cart is cleared -> Add to cart.
+      // If user adds from store -> Add to cart.
+      // If mixed, let's call it "INDIVIDUAL" to be safe, or just update to current.
+      setCartSource(source);
+    }
     setIsCartOpen(true);
     setTimeout(() => setIsCartOpen(false), 3000);
   };
@@ -77,7 +90,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ product_ids: productIds }),
+        body: JSON.stringify({ product_ids: productIds, purchase_type: cartSource }),
       });
 
       if (!response.ok) {
