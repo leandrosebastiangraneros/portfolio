@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from '../context/DialogContext';
+import { API_URL } from '../config';
 
 const Stock = () => {
     const [items, setItems] = useState([]);
@@ -23,7 +24,7 @@ const Stock = () => {
 
     const fetchStock = () => {
         setLoading(true);
-        fetch('http://localhost:8001/stock')
+        fetch(`${API_URL}/stock`)
             .then(res => res.json())
             .then(data => {
                 setItems(data);
@@ -48,7 +49,7 @@ const Stock = () => {
             return;
         }
 
-        fetch('http://localhost:8001/stock', {
+        fetch(`${API_URL}/stock`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: newItemName, cost_amount: cost, initial_quantity: qty })
@@ -93,7 +94,7 @@ const Stock = () => {
             return;
         }
 
-        fetch(`http://localhost:8001/stock/${selectedItem.id}/sell`, {
+        fetch(`${API_URL}/stock/${selectedItem.id}/sell`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sale_price_unit: priceUnit, quantity: qty, work_description: workDesc })

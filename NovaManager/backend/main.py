@@ -9,14 +9,28 @@ import models, schemas
 import reports
 from database import SessionLocal, engine
 
+import logging
+
+# Configure Logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
 # Create tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="NovaManager API")
 
+# Security: Restrict CORS to known frontends (dev and prod)
+# Security: Restrict CORS to known frontends (dev and prod)
+# For initial deployment flexibility, we allow all.Restrict this in strict production.
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,7 +63,7 @@ def startup_event():
                 db_cat = models.Category(**cat)
                 db.add(db_cat)
             db.commit()
-            print("--- Database Seeded with Default Categories ---")
+            logger.info("--- Database Seeded with Default Categories ---")
     finally:
         db.close()
 

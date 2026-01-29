@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDialog } from '../context/DialogContext';
+import { API_URL } from '../config';
 
 const Configuracion = () => {
     const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ const Configuracion = () => {
         if (!secondConfirm) return;
 
         setLoading(true);
-        fetch('http://localhost:8001/reset-db', { method: 'POST' })
+        fetch(`${API_URL}/reset-db`, { method: 'POST' })
             .then(res => res.json())
             .then(data => {
                 setMessage(data.message);

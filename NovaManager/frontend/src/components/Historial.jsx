@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from '../context/DialogContext';
+import { API_URL } from '../config';
 
 const Historial = () => {
     const [transactions, setTransactions] = useState([]);
@@ -10,7 +11,7 @@ const Historial = () => {
 
     const fetchTransactions = () => {
         setLoading(true);
-        fetch('http://localhost:8001/transactions?limit=200')
+        fetch(`${API_URL}/transactions?limit=200`)
             .then(res => res.json())
             .then(data => {
                 setTransactions(data);
@@ -26,7 +27,7 @@ const Historial = () => {
         const confirmed = await showConfirm("¿Seguro que deseas eliminar este movimiento?", "Eliminar Movimiento");
         if (!confirmed) return;
 
-        fetch(`http://localhost:8001/transactions/${id}`, {
+        fetch(`${API_URL}/transactions/${id}`, {
             method: 'DELETE',
         })
             .then(res => {

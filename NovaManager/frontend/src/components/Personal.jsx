@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from '../context/DialogContext';
+import { API_URL } from '../config';
 
 const Personal = () => {
     const [groups, setGroups] = useState([]);
@@ -33,7 +34,7 @@ const Personal = () => {
 
     const fetchGroups = () => {
         setLoading(true);
-        fetch('http://localhost:8001/employee-groups')
+        fetch(`${API_URL}/employee-groups`)
             .then(res => res.json())
             .then(data => {
                 setGroups(data);
@@ -46,7 +47,7 @@ const Personal = () => {
     };
 
     const fetchStock = () => {
-        fetch('http://localhost:8001/stock')
+        fetch(`${API_URL}/stock`)
             .then(res => res.json())
             .then(data => setStock(data.filter(i => i.quantity > 0)))
             .catch(err => console.error("Error stock:", err));
@@ -60,7 +61,7 @@ const Personal = () => {
     const handleCreateGroup = (e) => {
         e.preventDefault();
         if (!newGroupName) return;
-        fetch('http://localhost:8001/employee-groups', {
+        fetch(`${API_URL}/employee-groups`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: newGroupName })
@@ -74,7 +75,7 @@ const Personal = () => {
     const handleCreateEmployee = (e) => {
         e.preventDefault();
         if (!newEmployeeName || !selectedGroupId) return;
-        fetch('http://localhost:8001/employees', {
+        fetch(`${API_URL}/employees`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: newEmployeeName, group_id: selectedGroupId })
@@ -89,7 +90,7 @@ const Personal = () => {
         const confirmed = await showConfirm("¿Seguro que deseas eliminar a este empleado?");
         if (!confirmed) return;
 
-        fetch(`http://localhost:8001/employees/${id}`, { method: 'DELETE' })
+        fetch(`${API_URL}/employees/${id}`, { method: 'DELETE' })
             .then(() => {
                 fetchGroups();
                 showAlert("Empleado eliminado", "success");
@@ -117,7 +118,7 @@ const Personal = () => {
             return;
         }
 
-        fetch(`http://localhost:8001/employees/${empId}/records`, {
+        fetch(`${API_URL}/employees/${empId}/records`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -150,7 +151,7 @@ const Personal = () => {
         e.preventDefault();
         if (!selectedMaterialId || !usageQuantity) return;
 
-        fetch(`http://localhost:8001/stock/${selectedMaterialId}/use`, {
+        fetch(`${API_URL}/stock/${selectedMaterialId}/use`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -183,7 +184,7 @@ const Personal = () => {
         const amount = parseFloat(advanceAmount);
         if (isNaN(amount) || amount <= 0) return;
 
-        fetch(`http://localhost:8001/employees/${selectedEmp.id}/advances`, {
+        fetch(`${API_URL}/employees/${selectedEmp.id}/advances`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -206,7 +207,7 @@ const Personal = () => {
         setActiveTab('PAYMENTS');
         setHistoryData(null);
 
-        fetch(`http://localhost:8001/employees/${emp.id}/history`)
+        fetch(`${API_URL}/employees/${emp.id}/history`)
             .then(res => res.json())
             .then(data => setHistoryData(data))
             .catch(err => console.error("Error fetching history:", err));

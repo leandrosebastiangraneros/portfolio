@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDialog } from '../context/DialogContext';
+import { API_URL } from '../config';
 
 const MovimientoForm = ({ type, onClose, onSave }) => {
     const [amount, setAmount] = useState('');
@@ -10,7 +11,7 @@ const MovimientoForm = ({ type, onClose, onSave }) => {
     const { showAlert } = useDialog();
 
     useEffect(() => {
-        fetch('http://localhost:8001/categories')
+        fetch(`${API_URL}/categories`)
             .then(res => res.json())
             .then(data => setCategories(data))
             .catch(err => console.error("Error fetching categories:", err));
@@ -65,7 +66,7 @@ const MovimientoForm = ({ type, onClose, onSave }) => {
             is_invoiced: false
         };
 
-        fetch('http://localhost:8001/transactions', {
+        fetch(`${API_URL}/transactions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
