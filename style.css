@@ -705,27 +705,19 @@ body:not(.boot-complete) .section {
     height: 100vh;
     width: 100%;
     display: flex;
-    /* Main alignment control */
-    justify-content: flex-start;
-    /* Desktop: Align left (offset by padding) */
+    /* Main alignment control: Full center on all devices */
+    justify-content: center;
     align-items: center;
-    /* Vertical Center Always */
-    padding-left: 15%;
-    /* Horizontal Offset replacing margin-left */
+    padding: 0;
     z-index: 500;
     pointer-events: none;
     overflow: hidden;
 }
 
-/* Mobile Adaptation for Container */
+/* Mobile Adaptation for Container - simplified as base is now centered */
 @media (max-width: 900px) {
     .hero-section {
-        justify-content: center;
-        /* Center horizontally on mobile */
-        align-items: center;
         padding: 0 1rem;
-        /* Reset padding */
-        text-align: center;
     }
 }
 
@@ -749,7 +741,8 @@ body:not(.boot-complete) .hero-section {
     left: auto;
     top: auto;
     z-index: 10;
-    text-align: left;
+    text-align: center;
+    /* Always centered */
     max-width: 1000px;
     width: 100%;
     pointer-events: none;
