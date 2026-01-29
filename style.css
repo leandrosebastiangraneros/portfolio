@@ -863,7 +863,8 @@ body:not(.boot-complete) .hero-content {
 .title {
     /* Responsive font size allowing small shrink */
     font-size: clamp(2.5rem, 10vw, 7.5rem);
-    line-height: 0.95;
+    line-height: 0.85;
+    /* Tighter spacing */
     /* Better line height */
     font-weight: 950;
     margin-bottom: 2rem;
