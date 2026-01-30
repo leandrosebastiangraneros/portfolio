@@ -1,18 +1,87 @@
+/*
+* ----------------------------------------------------------------------------------------
+*  NEXUS HARDWARE - MAIN STYLESHEET
+* ----------------------------------------------------------------------------------------
+*  TABLE OF CONTENTS:
+*  1.  Variables & Design Tokens (:root)
+*  2.  Reset & Base Styles
+*  3.  Utilities & Helpers
+*  4.  Animations (Keyframes)
+*  5.  Components (Buttons, Loaders, HUD)
+*  6.  Layout Sections (Hero, About, Projects)
+*  7.  Unified Card System (.tech-card)
+*  8.  Media Queries & Responsive Logic
+* ----------------------------------------------------------------------------------------
+*/
+
 :root {
+    /* --- COLORS --- */
     --bg-color: #050505;
+    /* Deep Black */
     --text-color: #ffffff;
     --accent-color: #ffffff;
     --secondary-bg: #111111;
     --secondary-text: #ffffff;
+
+    /* Semantic Colors */
+    --card-bg: #ffffff;
+    --card-text: #000000;
+    --border-black: #000000;
+    --indicator-green: #00ff00;
+
+    /* --- TYPOGRAPHY --- */
+    --font-primary: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    /* --- CONFIG --- */
     --transition-speed: 0.5s;
+
+    /* --- Z-INDEX LAYERS (Single Source of Truth) --- */
+    --z-background: -999;
+    --z-base: 1;
+    --z-card: 10;
+    --z-floating: 100;
+    --z-hud: 9999;
+    --z-nav: 9999;
+    --z-overlay: 10000;
+    --z-cursor: 100000;
+    --z-boot: 99999;
 }
 
+/* --- RESET & BASE --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     cursor: none;
-    /* Oculta el cursor predeterminado para usar el personalizado */
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+}
+
+/* --- UTILITIES --- */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.font-mono {
+    font-family: var(--font-mono);
 }
 
 /* Barra de desplazamiento personalizada - Estilo Minimalista */
@@ -53,22 +122,6 @@ html.boot-complete {
 
 /* ... (existing styles) ... */
 
-/* Centrar texto en móviles */
-@media (max-width: 768px) {
-    .hero-content {
-        text-align: center;
-        padding: 0 1rem;
-        /* Use standard padding instead of 0 padding */
-        margin: 0 auto;
-        left: 0;
-        /* Reset the 4cm left property */
-        width: 100%;
-        /* Ensure it takes full width */
-        transform: translateY(-50%);
-        /* Keep vertical center */
-    }
-}
-
 body {
     background-color: #000;
     color: var(--text-color);
@@ -83,13 +136,28 @@ body.boot-complete {
     animation: globalFadeIn 1.5s ease forwards;
 }
 
+/* Unified Fade Animations */
 @keyframes globalFadeIn {
-    0% {
+    from {
         opacity: 0;
     }
 
-    100% {
+    to {
         opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
     }
 }
 
@@ -115,7 +183,7 @@ body.boot-complete {
 .nav-links a,
 .hud-data,
 .footer {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
 }
 
 /* Cursor Personalizado */
@@ -126,7 +194,7 @@ body.boot-complete {
     left: 0;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    z-index: 100000;
+    z-index: var(--z-cursor);
     pointer-events: none;
     mix-blend-mode: difference;
     /* Efecto negativo para invertir colores */
@@ -157,88 +225,9 @@ body.boot-complete {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -999;
+    z-index: var(--z-background);
     /* Detrás de todo el contenido */
     pointer-events: none;
-}
-
-/* Efectos Atmosféricos (Ruido y Líneas de Escaneo) */
-.atmosphere-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 2;
-    /* Se mantiene como fondo */
-    overflow: hidden;
-}
-
-.grain {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/Noise_600x600.png');
-    opacity: 0.05;
-    animation: grainMove 8s steps(10) infinite;
-}
-
-@keyframes grainMove {
-
-    0%,
-    100% {
-        transform: translate(0, 0);
-    }
-
-    10% {
-        transform: translate(-5%, -10%);
-    }
-
-    20% {
-        transform: translate(-15%, 5%);
-    }
-
-    30% {
-        transform: translate(7%, -25%);
-    }
-
-    40% {
-        transform: translate(-5%, 25%);
-    }
-
-    50% {
-        transform: translate(-15%, 10%);
-    }
-
-    60% {
-        transform: translate(15%, 0%);
-    }
-
-    70% {
-        transform: translate(0%, 15%);
-    }
-
-    80% {
-        transform: translate(3%, 35%);
-    }
-
-    90% {
-        transform: translate(-10%, 10%);
-    }
-}
-
-.scanlines {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom,
-            rgba(18, 16, 16, 0) 50%,
-            rgba(0, 0, 0, 0.08) 50%);
-    background-size: 100% 4px;
-    z-index: 9001;
 }
 
 /* Superposición HUD - Capa superior para datos de interfaz, pero permite interacción debajo si es necesario */
@@ -350,28 +339,36 @@ body:not(.boot-complete) .section {
 
 
 
-/* Superposición de Arranque */
-/* Superposición de Arranque - ctOS Style */
+
+/* Pantalla de Carga */
 #boot-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, rgba(10, 20, 30, 0.4) 0%, #000 90%);
-    z-index: 99999;
+    background: radial-gradient(circle at center, rgba(10, 20, 30, 0.4) 0%, var(--bg-color) 90%);
+    z-index: var(--z-boot);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Space Mono', monospace;
-    color: #ffffff;
+    font-family: var(--font-mono);
+    color: var(--text-color);
     /* Cyan ctOS */
     pointer-events: none;
     overflow: hidden;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    /* Prepare for fade */
 }
 
-/* ctOS Center Piece */
+/* Hide overlay when boot is complete */
+body.boot-complete #boot-overlay {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .ctos-center-container {
     position: relative;
     width: 300px;
@@ -382,31 +379,9 @@ body:not(.boot-complete) .section {
     margin-bottom: 2rem;
 }
 
-.ctos-ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid #ffffff;
-    border-bottom: 2px solid #fdffff;
-    border-radius: 50%;
-    animation: spinRight 4s linear infinite;
-}
-
-.ctos-ring::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
 
 .loader-text {
-    font-family: 'Space Mono', sans-serif;
+    font-family: var(--font-mono);
     font-weight: 700;
     font-size: 1.2rem;
     letter-spacing: 4px;
@@ -415,12 +390,7 @@ body:not(.boot-complete) .section {
     margin-bottom: 0.5rem;
 }
 
-.blinking-cursor {
-    animation: blink 1s step-end infinite;
-    color: #e7e7e7;
-}
-
-/* Premium Progress Bar */
+/* Barra de Progreso */
 .loader-bar-bg {
     width: 100%;
     height: 2px;
@@ -440,38 +410,13 @@ body:not(.boot-complete) .section {
 
 /* Percentage Display */
 .loader-percent {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.8rem;
     color: #f0f0f0;
     align-self: flex-end;
     font-weight: bold;
 }
 
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
-}
-
-@keyframes pulseLogo {
-    from {
-        opacity: 0.6;
-        text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
-    }
-
-    to {
-        opacity: 1;
-        text-shadow: 0 0 30px rgba(0, 240, 255, 0.9);
-    }
-}
-
-
-.ctos-bottom-bar {
-    position: absolute;
-    bottom: 50px;
-    display: flex;
-    gap: 10px;
-}
 
 .bar-segment {
     width: 50px;
@@ -488,31 +433,7 @@ body:not(.boot-complete) .section {
     animation-delay: 0.4s;
 }
 
-@keyframes spinRight {
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes spinLeft {
-    100% {
-        transform: rotate(-360deg);
-    }
-}
-
-@keyframes pulseScale {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-
-    50% {
-        transform: scale(1.1);
-        opacity: 1;
-    }
-}
+/* Removed unused animations: spinRight, spinLeft, pulseScale */
 
 @keyframes barFill {
     from {
@@ -571,7 +492,8 @@ body:not(.boot-complete) .section {
 }
 
 .navbar-wrapper {
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--secondary-bg);
+    /* Fallback / Theme variable */
     backdrop-filter: blur(10px);
     padding: 0.6rem 2rem;
     border-radius: 50px;
@@ -698,53 +620,53 @@ body:not(.boot-complete) .section {
     transition: width 0.3s;
 }
 
-/* Sección Hero - Universal Responsive Layout */
-/* Sección Hero - Universal Responsive Layout */
+/* Sección Hero - Estructura Base de Centrado Absoluto */
 .hero-section {
     position: relative;
     height: 100vh;
     width: 100%;
-    display: flex;
-    /* Main alignment control: Full center on all devices */
-    justify-content: center;
-    align-items: center;
-    padding: 0;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+    /* Reset padding to use margins on child */
+    margin-top: 800px;
     z-index: 500;
     pointer-events: none;
     overflow: hidden;
 }
 
-/* Mobile Adaptation for Container - simplified as base is now centered */
-@media (max-width: 900px) {
-    .hero-section {
-        padding: 0 1rem;
-    }
-}
+/* Removed conflicting z-index hack */
 
-body:not(.boot-complete) .hero-section {
-    z-index: 100001;
-}
-
-
-/* Standardized Entry Transition for Hero Content */
 .hero-content {
-    /* Initial State */
+    /* Estado Inicial (JS cambiará a show-element) */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(30px);
+    transform: translateY(-40%) !important;
+    /* Ligeramente desplazado para efecto entrada */
     filter: blur(10px);
 
-    /* Layout Position */
-    position: relative;
-    /* Remove margins, rely on parent flex */
-    margin: 0;
-    left: auto;
-    top: auto;
+    /* Layout Universal y Robusto - Alineado a la Izquierda */
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    /* Margen izquierdo relativo seguro */
+
+    width: auto;
+    max-width: 800px;
+    /* Permitir suficiente ancho sin tocar el globo */
+    margin: 0 !important;
+    /* Eliminar márgenes fijos antiguos */
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Alinear flex items a la izquierda */
+    justify-content: center;
+    text-align: left;
+    /* Alineación de texto a la izquierda */
+
     z-index: 10;
-    text-align: center;
-    /* Always centered */
-    max-width: 1000px;
-    width: 100%;
     pointer-events: none;
     box-sizing: border-box;
 
@@ -754,20 +676,17 @@ body:not(.boot-complete) .hero-section {
         filter 1.5s ease-out;
 }
 
-
-/* Increased specificity to avoid !important */
+/* Estado Animado (Final) */
 body.boot-complete .hero-content.show-element {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) !important;
     filter: blur(0);
 }
 
-.hero-content {
-    /* ... existing props ... */
-    pointer-events: none;
-    /* Container passes clicks */
-}
+
+
+/* ... props ya definidos en bloque consolidado ... */
 
 /* Solo los elementos interactivos reales deben capturar el mouse (botones, links) */
 .hero-content a,
@@ -787,18 +706,15 @@ body.boot-complete .hero-content.show-element {
 /* Mobile Adaptation */
 @media (max-width: 900px) {
     .hero-content {
-        text-align: center;
-        margin: 0;
-        /* Reset */
-        width: 100%;
-        height: auto;
-        /* Let content dictate height */
-        display: block;
-        /* Flex parent handles centering */
-        position: static;
-        /* No absolute positioning needed */
-        transform: none !important;
-        padding: 0;
+        position: relative !important;
+        inset: auto !important;
+        margin: 2rem auto !important;
+
+        /* FIX: Usar fit-content para no bloquear todo el ancho de pantalla (globo interactuable) */
+        width: fit-content !important;
+        max-width: 90% !important;
+
+        padding: 0 1rem !important;
     }
 }
 
@@ -831,19 +747,19 @@ body:not(.boot-complete) .hero-content {
 
 .subtitle {
     font-size: clamp(0.75rem, 3vw, 1.1rem);
-    /* Slight reduction */
     text-transform: uppercase;
     letter-spacing: 3px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    /* Tightened */
     opacity: 0.8;
 }
 
 .title {
-    /* Safer scaling: Max 6rem instead of 7.5rem */
-    font-size: clamp(2rem, 8vw, 6rem);
-    line-height: 0.9;
+    font-size: clamp(1.8rem, 8vw, 4.8rem);
+    /* Reducido para evitar cortes en Notebooks */
+    line-height: 0.82;
     font-weight: 950;
-    margin-bottom: 2rem;
+    margin-bottom: 0.8rem;
     letter-spacing: -2px;
     color: #fff;
     text-transform: uppercase;
@@ -856,10 +772,6 @@ body:not(.boot-complete) .hero-content {
         font-size: clamp(3rem, 5vw, 4.5rem);
         /* Smaller scale just for this range */
         letter-spacing: -2px;
-    }
-
-    .hero-section {
-        padding: 0 4%;
     }
 }
 
@@ -876,30 +788,46 @@ body:not(.boot-complete) .hero-content {
 }
 
 .role {
-    font-size: 1.5rem;
-    margin-bottom: 8rem;
+    font-size: clamp(0.9rem, 2vw, 1.5rem);
+    /* Responsive: se achica proporcionalmente */
+    margin-bottom: 0;
     font-weight: 300;
+    letter-spacing: 2px;
+    /* Un poco de aire para que se vea más técnico */
 }
 
-/* Animación de Texto */
-.animate-text span {
+/* Animaciones de Entrada Escalonada (CSS Fade In Up) */
+.hero-content .subtitle,
+.hero-content .title,
+.hero-content .role {
     opacity: 0;
-    display: inline-block;
-    animation: fadeInLetter 0.5s forwards;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-@keyframes fadeInLetter {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-        filter: blur(10px);
-    }
+/* Al activarse el hero (show-element), disparar transición */
+body.boot-complete .hero-content.show-element .subtitle {
+    opacity: 0.8;
+    /* Opacidad original del subtítulo */
+    transform: translateY(0);
+    transition-delay: 0.1s;
+}
 
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
+body.boot-complete .hero-content.show-element .title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s;
+}
+
+body.boot-complete .hero-content.show-element .role {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.5s;
+}
+
+/* Quitar animaciones viejas si quedaran */
+.animate-text span {
+    animation: none;
 }
 
 /* Contenedor del Globo: Diseño Base */
@@ -1079,73 +1007,116 @@ body.boot-complete #globe-container.interactive {
     width: 100%;
 }
 
-.solid-card {
-    background: #ffffff !important;
-    border: none !important;
-    /* Clip-path maneja la forma, borde por pseudo-elementos */
-    /* Esquinas angulares futuristas */
-    clip-path: polygon(20px 0, 100% 0,
-            100% calc(100% - 20px), calc(100% - 20px) 100%,
-            0 100%, 0 20px);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-    /* Resplandor blanco sutil */
-    color: #000 !important;
-    transition: transform 0.1s ease-out, box-shadow 0.5s ease;
+/* --- UNIFIED CARD SYSTEM (.tech-card) --- */
+/* Common Logic with Variable Hooks for Customization */
+.tech-card,
+.solid-card,
+.skill-module,
+.vault-item,
+.contact-terminal,
+.comm-card {
+    /* Variables Default (Matches .solid-card & .comm-card) */
+    --clip-size: 20px;
+    --corner-size: 30px;
+
+    background: var(--card-bg);
+    color: var(--card-text);
     position: relative;
+    border: none;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: visible;
-    pointer-events: auto;
-    padding: 2.5rem;
-    /* Más espacio interior */
     transform-style: preserve-3d;
-    width: 100%;
-    /* Asegurar ancho completo en columna */
-    height: 100%;
-    /* Asegurar altura completa en columna */
-    display: flex;
-    flex-direction: column;
+
+    /* Dynamic Clip Path */
+    clip-path: polygon(var(--clip-size) 0,
+            100% 0,
+            100% calc(100% - var(--clip-size)),
+            calc(100% - var(--clip-size)) 100%,
+            0 100%,
+            0 var(--clip-size));
 }
 
-/* Acentos de corchetes usando Pseudo-elementos */
+.tech-card::before,
+.tech-card::after,
 .solid-card::before,
-.solid-card::after {
+.solid-card::after,
+.skill-module::before,
+.skill-module::after,
+.vault-item::before,
+.vault-item::after,
+.contact-terminal::before,
+.contact-terminal::after,
+.comm-card::before,
+.comm-card::after {
     content: '';
     position: absolute;
-    width: 30px;
-    height: 30px;
-    border: 3px solid #000;
-    /* Corchetes negros */
+    width: var(--corner-size);
+    height: var(--corner-size);
+    border: 3px solid var(--border-black);
     pointer-events: none;
     transition: all 0.4s ease;
-    mix-blend-mode: normal;
+    z-index: 2;
 }
 
-.solid-card::before {
+.tech-card::before,
+.solid-card::before,
+.skill-module::before,
+.vault-item::before,
+.contact-terminal::before,
+.comm-card::before {
     top: 0;
     left: 0;
     border-right: 0;
     border-bottom: 0;
 }
 
-.solid-card::after {
+.tech-card::after,
+.solid-card::after,
+.skill-module::after,
+.vault-item::after,
+.contact-terminal::after,
+.comm-card::after {
     bottom: 0;
     right: 0;
     border-left: 0;
     border-top: 0;
 }
 
-.solid-card:hover {
+.tech-card:hover,
+.solid-card:hover,
+.skill-module:hover,
+.vault-item:hover,
+.contact-terminal:hover,
+.comm-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
 }
 
-.solid-card:hover::before {
+.tech-card:hover::before,
+.tech-card:hover::after,
+.solid-card:hover::before,
+.solid-card:hover::after,
+.skill-module:hover::before,
+.skill-module:hover::after,
+.vault-item:hover::before,
+.vault-item:hover::after,
+.contact-terminal:hover::before,
+.contact-terminal:hover::after,
+.comm-card:hover::before,
+.comm-card:hover::after {
     width: 100%;
     height: 100%;
 }
 
-.solid-card:hover::after {
+/* Specific Card Adaptations using the base .tech-card */
+.solid-card {
+    /* Extends .tech-card */
+    padding: 2.5rem;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .about-intro.dashboard-layout {
@@ -1272,7 +1243,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .entry-card .year {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 950;
     font-size: 1rem;
     color: #000;
@@ -1322,7 +1293,7 @@ body.boot-complete #globe-container.interactive {
     text-decoration: none;
     padding: 1.5rem;
     margin-top: 1.5rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 950;
     transition: all 0.3s;
 }
@@ -1369,7 +1340,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .card-header {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     opacity: 0.5;
     margin-bottom: 1.5rem;
@@ -1392,7 +1363,7 @@ body.boot-complete #globe-container.interactive {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
 }
 
 .stat-item {
@@ -1412,7 +1383,7 @@ body.boot-complete #globe-container.interactive {
     background: #000;
     color: #fff;
     font-size: 0.7rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
 }
 
 .code-snippet {
@@ -1445,54 +1416,18 @@ body.boot-complete #globe-container.interactive {
 }
 
 .skill-module {
-    background: #fff;
-    color: #000;
+    /* Restore exact look */
+    --clip-size: 15px;
+    --corner-size: 20px;
+
     padding: 2rem;
-    position: relative;
-    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
-    transition: transform 0.1s ease-out, box-shadow 0.5s ease;
-    border: none;
     overflow: visible;
-    transform-style: preserve-3d;
 }
 
-.skill-module::before,
-.skill-module::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #000;
-    pointer-events: none;
-    transition: all 0.4s ease;
-}
-
-.skill-module::before {
-    top: 0;
-    left: 0;
-    border-right: 0;
-    border-bottom: 0;
-}
-
-.skill-module::after {
-    bottom: 0;
-    right: 0;
-    border-left: 0;
-    border-top: 0;
-}
-
-.skill-module:hover::before,
-.skill-module:hover::after {
-    width: 100%;
-    height: 100%;
-}
-
-.skill-module:hover {
-    transform: translateY(-5px);
-}
+/* Note: Visual logic moved to shared block or expected to be :is(.skill-module, .tech-card) */
 
 .module-meta {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     display: flex;
     justify-content: space-between;
@@ -1502,7 +1437,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .skill-module h3 {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 1.2rem;
     margin-bottom: 1rem;
     text-transform: uppercase;
@@ -1540,27 +1475,19 @@ body.boot-complete #globe-container.interactive {
 }
 
 .vault-item {
+    /* Restore exact look */
+    --clip-size: 15px;
+    --corner-size: 30px;
+
     display: flex;
     flex-direction: row;
-    background: #ffffff;
-    color: #000000;
     text-decoration: none;
-    position: relative;
-    clip-path: polygon(15px 0,
-            100% 0,
-            100% calc(100% - 15px),
-            calc(100% - 15px) 100%,
-            0 100%,
-            0 15px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     min-height: 180px;
-    border: none;
-    overflow: hidden;
 }
 
 .vault-item:hover {
-    transform: translateX(10px);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    transform: translateX(10px) !important;
+    /* Specific override */
 }
 
 /* Vertical Strip UID */
@@ -1577,7 +1504,7 @@ body.boot-complete #globe-container.interactive {
 .card-strip span {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     color: #888;
     white-space: nowrap;
@@ -1594,7 +1521,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .vault-item h3 {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -1617,7 +1544,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .item-meta {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.75rem;
     color: #666;
     display: flex;
@@ -1784,7 +1711,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .item-id {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.8rem;
     opacity: 0.4;
     writing-mode: vertical-rl;
@@ -1792,7 +1719,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .item-content h3 {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
     color: #000;
@@ -1801,7 +1728,7 @@ body.boot-complete #globe-container.interactive {
 .item-meta {
     display: flex;
     gap: 1.5rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     opacity: 0.8;
     margin: 1rem 0;
@@ -1812,7 +1739,7 @@ body.boot-complete #globe-container.interactive {
     display: inline-block;
     color: #000;
     text-decoration: none;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 900;
     border-bottom: 2px solid #000;
     padding-bottom: 2px;
@@ -1820,50 +1747,15 @@ body.boot-complete #globe-container.interactive {
 
 /* Terminal de Contacto */
 .contact-terminal {
-    background: #fff;
-    color: #000;
-    border: none;
+    /* Restore exact look */
+    --clip-size: 30px;
+    --corner-size: 40px;
+
     padding: 3rem;
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
-    font-family: 'Space Mono', monospace;
-    clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px);
-    position: relative;
-    overflow: visible;
-    transition: transform 0.1s ease-out, box-shadow 0.5s ease;
-    transform-style: preserve-3d;
-}
-
-.contact-terminal::before,
-.contact-terminal::after {
-    content: '';
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border: 4px solid #000;
-    pointer-events: none;
-    transition: all 0.4s ease;
-}
-
-.contact-terminal::before {
-    top: 0;
-    left: 0;
-    border-right: 0;
-    border-bottom: 0;
-}
-
-.contact-terminal::after {
-    bottom: 0;
-    right: 0;
-    border-left: 0;
-    border-top: 0;
-}
-
-.contact-terminal:hover::before,
-.contact-terminal:hover::after {
-    width: 100%;
-    height: 100%;
+    font-family: var(--font-mono);
 }
 
 .terminal-line {
@@ -1983,7 +1875,7 @@ body.boot-complete #globe-container.interactive {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.9rem;
     color: #fff;
 }
@@ -2012,7 +1904,7 @@ body.boot-complete #globe-container.interactive {
     background: transparent;
     border: none;
     color: #fff;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 1rem;
     width: 100%;
     outline: none;
@@ -2077,7 +1969,7 @@ body.boot-complete #globe-container.interactive {
     align-items: center;
     border-bottom: 1px solid #eee;
     padding-bottom: 1rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.75rem;
     color: #666;
 }
@@ -2137,35 +2029,6 @@ body.boot-complete #globe-container.interactive {
     max-width: 90%;
 }
 
-/* 2. Main Grid Layout */
-.profile-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.role-title {
-    font-size: 3rem;
-    font-weight: 900;
-    line-height: 0.85;
-    letter-spacing: -2px;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    color: #000;
-}
-
-.bio-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #444;
-    max-width: 90%;
-}
-
-.bio-text strong {
-    color: #000;
-    font-weight: 600;
-}
 
 /* 3. Specs Column */
 .specs-column {
@@ -2183,7 +2046,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 .spec-item .label {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     color: #999;
     margin-bottom: 4px;
@@ -2193,7 +2056,7 @@ body.boot-complete #globe-container.interactive {
     font-size: 1.1rem;
     font-weight: 700;
     color: #000;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
 }
 
 /* 4. Footer Deco */
@@ -2204,7 +2067,7 @@ body.boot-complete #globe-container.interactive {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     color: #ccc;
 }
@@ -2222,7 +2085,7 @@ body.boot-complete #globe-container.interactive {
     color: #fff;
     padding: 0;
     /* Removing padding to allow header to span full width */
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     border: 1px solid #333;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     position: relative;
@@ -2330,7 +2193,7 @@ body.boot-complete #globe-container.interactive {
 }
 
 /* Anulación Específica de Centrado del Hero */
-/* Asegura que el texto del hero se mantenga centrado al 45% superior incluso cuando se aplica .show-element */
+/* Asegura que el texto del hero se mantenga centrado verticalmente al 50% */
 body.boot-complete .hero-content.show-element {
     animation: fadeInHeroContent 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
     transform: translateY(-50%) !important;
@@ -2338,160 +2201,22 @@ body.boot-complete .hero-content.show-element {
     visibility: visible !important;
 }
 
-/* --- REDISEÑO DE PERFIL LOGUEADO --- */
-/* Rediseño de Tarjeta de Perfil de Especificaciones Técnicas */
-.holo-node[data-node="bio"] {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 2rem;
-    background: #fff;
-    /* Fondo blanco limpio */
-    border: 1px solid #000;
-    /* Borde de alto contraste */
-    font-family: 'Inter', sans-serif;
-}
+@keyframes fadeInHeroContent {
+    0% {
+        opacity: 0;
+        filter: blur(20px);
+        transform: translateY(-30%);
+        /* Empieza un poco más abajo (menos negativo) */
+    }
 
-/* 1. Encabezado con ID y Estado */
-.tech-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    color: #666;
-}
-
-.status-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    color: #000;
-}
-
-.blink-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #00ff00;
-    /* LED verde activo */
-    border-radius: 50%;
-    animation: blink 2s infinite;
-    box-shadow: 0 0 5px #00ff00;
-}
-
-@keyframes blink {
-
-    0%,
     100% {
         opacity: 1;
-    }
-
-    50% {
-        opacity: 0.3;
-    }
-}
-
-/* 2. Diseño de Cuadrícula Principal */
-.profile-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-}
-
-.role-title {
-    font-size: 3rem;
-    font-weight: 900;
-    line-height: 0.85;
-    letter-spacing: -2px;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    color: #000;
-}
-
-.bio-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #444;
-    max-width: 90%;
-}
-
-.bio-text strong {
-    color: #000;
-    font-weight: 600;
-}
-
-/* 3. Columna de Especificaciones */
-.specs-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    border-left: 1px solid #eee;
-    padding-left: 2rem;
-    justify-content: center;
-}
-
-.spec-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.spec-item .label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: #999;
-    margin-bottom: 4px;
-}
-
-.spec-item .value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #000;
-    font-family: 'Space Mono', monospace;
-}
-
-/* 4. Decoración de Pie de Página */
-.card-footer-deco {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: #ccc;
-}
-
-.barcode {
-    font-weight: 900;
-    letter-spacing: 2px;
-    font-size: 0.8rem;
-    color: #000;
-}
-
-/* 5. Ajustes Responsivos */
-@media (max-width: 768px) {
-    .profile-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .specs-column {
-        border-left: none;
-        border-top: 1px solid #eee;
-        padding-left: 0;
-        padding-top: 1.5rem;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .role-title {
-        font-size: 2.5rem;
+        filter: blur(0);
+        transform: translateY(-50%);
+        /* Termina perfectamente centrado */
     }
 }
+
 
 /* Fix for Section Titles Overflowing on Mobile */
 /* Fix for Section Titles Overflowing on Mobile & Tablet */
@@ -2520,18 +2245,11 @@ body.boot-complete .hero-content.show-element {
 }
 
 .comm-card {
+    /* Extends .tech-card */
     display: flex;
     flex-direction: row;
-    background: #ffffff;
-    color: #000;
     width: 100%;
     max-width: 800px;
-    clip-path: polygon(20px 0,
-            100% 0,
-            100% calc(100% - 20px),
-            calc(100% - 20px) 100%,
-            0 100%,
-            0 20px);
     overflow: hidden;
     min-height: 300px;
 }
@@ -2547,7 +2265,7 @@ body.boot-complete .hero-content.show-element {
 .comm-card h3 {
     font-size: 2rem;
     margin-bottom: 1rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 700;
 }
 
@@ -2568,7 +2286,7 @@ body.boot-complete .hero-content.show-element {
 .comm-btn {
     background: #000;
     color: #fff;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 1.2rem;
     padding: 1rem 2rem;
     text-decoration: none;
@@ -2625,7 +2343,7 @@ body.boot-complete .hero-content.show-element {
 }
 
 .node-data .label {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     font-weight: 700;
 }
@@ -2647,7 +2365,7 @@ body.boot-complete .hero-content.show-element {
     padding-top: 1rem;
     display: flex;
     justify-content: space-between;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     color: #888;
 }
@@ -2657,14 +2375,24 @@ body.boot-complete .hero-content.show-element {
     color: #00cc00;
 }
 
-@keyframes blinkText {
-    from {
+/* Unified Blink Animation */
+@keyframes blink-std {
+
+    0%,
+    100% {
         opacity: 1;
     }
 
-    to {
-        opacity: 0.5;
+    50% {
+        opacity: 0.3;
     }
+}
+
+.blinking-cursor,
+.blink-dot,
+.blink-text,
+.console-blink .value {
+    animation: blink-std 1.5s step-end infinite;
 }
 
 @media (max-width: 600px) {
@@ -2686,6 +2414,18 @@ body.boot-complete .hero-content.show-element {
         padding: 1.5rem;
     }
 }
-}
+
 
 /* End of valid styles */
+/* --- ACCESSIBILITY --- */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
