@@ -23,8 +23,12 @@
             "destination": "/cv.pdf"
         },
         {
+            "source": "/",
+            "destination": "/nova/index.html"
+        },
+        {
             "source": "/(.*)",
-            "destination": "/index.html"
+            "destination": "/nova/index.html"
         }
     ]
 }
