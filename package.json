@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run build:nova && npm run build:nexus && vite build",
+    "build:nova": "cd public/NovaManager/frontend && npm install && npm run build && cd ../../../ && npx -y shx cp -r public/NovaManager/frontend/dist/* public/nova/",
+    "build:nexus": "cd public/NexusHardware/frontend && npm install && npm run build && cd ../../../ && npx -y shx cp -r public/NexusHardware/frontend/dist/* public/nexus/",
     "lint": "eslint .",
     "preview": "vite preview"
   },

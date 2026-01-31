@@ -11,12 +11,12 @@
             "destination": "/KeyResponseVisualizer/:path*"
         },
         {
-            "source": "/NexusHardware/:path*",
-            "destination": "/NexusHardware/:path*"
+            "source": "/nova/:path*",
+            "destination": "/nova/:path*"
         },
         {
-            "source": "/NovaManager/:path*",
-            "destination": "/NovaManager/:path*"
+            "source": "/nexus/:path*",
+            "destination": "/nexus/:path*"
         },
         {
             "source": "/cv.pdf",
