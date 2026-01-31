@@ -200,7 +200,7 @@ export default function AboutSection() {
                             </div>
 
                             <div className="dossier-action">
-                                <a href="/cv.pdf" download className="holo-download-btn">
+                                <a href={`${(import.meta.env.BASE_URL || "/").replace(/\/$/, "")}/cv.pdf`} download className="holo-download-btn">
                                     <div className="btn-glitch-layer"></div>
                                     <span className="btn-text">INITIALIZE_DOWNLOAD</span>
                                     <div className="btn-scanline"></div>
