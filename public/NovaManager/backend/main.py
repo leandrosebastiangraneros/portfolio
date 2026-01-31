@@ -29,7 +29,13 @@ app = FastAPI(title="NovaManager API")
 # Security: Restrict CORS to known frontends (dev and prod)
 # Security: Restrict CORS to known frontends (dev and prod)
 # For initial deployment flexibility, we allow all.Restrict this in strict production.
-origins = ["*"]
+origins = [
+    "http://localhost:5173",
+    "http://localhost:5500",
+    "http://127.0.0.1:5173",
+    "https://leandrosebastiangraneros.github.io",
+    "https://portfolio-hazel-five-14.vercel.app"
+]
 
 app.add_middleware(
     CORSMiddleware,
