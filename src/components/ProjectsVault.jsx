@@ -156,7 +156,7 @@ export default function ProjectsVault() {
                     </a>
 
                     {/* PROYECTO 3: Nexus Hardware */}
-                    <a href={`${basePrefix}/nexus/index.html`} className="vault-item" draggable="false">
+                    <a href="nexus/index.html" className="vault-item" draggable="false">
                         <div className="card-strip">
                             <span>UID: NEXUS-STORE-003</span>
                         </div>
@@ -201,7 +201,7 @@ export default function ProjectsVault() {
                     </a>
 
                     {/* PROYECTO 5: NovaManager */}
-                    <a href={`${basePrefix}/nova/index.html`} className="vault-item" target="_blank" rel="noopener noreferrer" draggable="false">
+                    <a href="nova/index.html" className="vault-item" target="_blank" rel="noopener noreferrer" draggable="false">
                         <div className="card-strip">
                             <span>UID: NOVAMANAGER-V1</span>
                         </div>

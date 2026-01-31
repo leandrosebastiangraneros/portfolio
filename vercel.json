@@ -3,12 +3,8 @@
     "trailingSlash": false,
     "rewrites": [
         {
-            "source": "/FortniteLatencyMonitor/:path*",
-            "destination": "/FortniteLatencyMonitor/:path*"
-        },
-        {
-            "source": "/KeyResponseVisualizer/:path*",
-            "destination": "/KeyResponseVisualizer/:path*"
+            "source": "/",
+            "destination": "/nova/index.html"
         },
         {
             "source": "/nova/:path*",
@@ -21,10 +17,6 @@
         {
             "source": "/cv.pdf",
             "destination": "/cv.pdf"
-        },
-        {
-            "source": "/",
-            "destination": "/nova/index.html"
         },
         {
             "source": "/(.*)",
