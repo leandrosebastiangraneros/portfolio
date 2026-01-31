@@ -12,6 +12,9 @@ export default function Globe3D() {
         const width = container.clientWidth;
         const height = container.clientHeight;
 
+        // Detect Mobile for performance profiling
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
         // Scene
         const scene = new THREE.Scene();
 
@@ -26,18 +29,32 @@ export default function Globe3D() {
             powerPreference: "high-performance"
         });
         renderer.setSize(width, height);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        // Optimization: Reduce resolution on mobile
+        renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
+
+        // Anti-alias toggle for mobile performance
+        if (isMobile) {
+            renderer.antialias = false;
+        }
 
         // OrbitControls (Centered on origin)
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.enableZoom = false;
-        controls.target.set(0, 0, 0); // Ensure rotation is internal
+        controls.target.set(0, 0, 0);
         controls.rotateSpeed = 0.5;
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 1.0;
+        controls.autoRotateSpeed = 0.8; // Slightly slower for elegance
+
+        // FIX: Prioritize page scroll on mobile
+        // Desactivamos la interacción táctil directa en el canvas para que no robe el scroll
+        // El globo seguirá rotando solo (autoRotate) y será interactivo en Desktop (mouse)
+        if (isMobile) {
+            controls.enabled = false;
+            renderer.domElement.style.pointerEvents = 'none'; // Passthrough touch events
+        }
 
         // Groups
         const globeGroup = new THREE.Group();
@@ -103,8 +120,8 @@ export default function Globe3D() {
         const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
         globeGroup.add(coreSphere);
 
-        // 3. Points Cloud
-        const particleCount = 2000;
+        // 3. Points Cloud (Reduced for mobile performance)
+        const particleCount = isMobile ? 800 : 2000;
         const positions = new Float32Array(particleCount * 3);
         const r = 5.05;
         for (let i = 0; i < particleCount; i++) {
