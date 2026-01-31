@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDialog } from '../context/DialogContext';
 import { API_URL } from '../config';
+import WorkerProfile from './WorkerProfile';
 
 const Personal = () => {
     const [groups, setGroups] = useState([]);
@@ -526,132 +527,12 @@ const Personal = () => {
                     </div>
                 </div>
             )}
-            {/* History Modal */}
-            {historyModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 transition-opacity">
-                    <div className="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden border border-slate-700 animate-in fade-in zoom-in duration-200 flex flex-col h-[80vh]">
-                        <div className="p-6 text-white flex justify-between items-center bg-slate-900 border-b border-slate-700">
-                            <div>
-                                <h2 className="text-xl font-bold tracking-tight">Detalle del Empleado</h2>
-                                <p className="text-slate-400 text-sm mt-1">{selectedHistoryEmp?.name}</p>
-                            </div>
-                            <button onClick={() => setHistoryModalOpen(false)} className="text-white/80 hover:text-white transition-colors">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>
-                        </div>
-
-                        {/* Tabs */}
-                        <div className="flex border-b border-slate-700 bg-slate-900/50">
-                            <button
-                                onClick={() => setActiveTab('PAYMENTS')}
-                                className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors border-b-2 ${activeTab === 'PAYMENTS' ? 'border-blue-500 text-blue-400 bg-blue-500/5' : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800'}`}
-                            >
-                                Pagos Realizados
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('ADVANCES')}
-                                className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors border-b-2 ${activeTab === 'ADVANCES' ? 'border-amber-500 text-amber-400 bg-amber-500/5' : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800'}`}
-                            >
-                                Adelantos
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('MATERIALS')}
-                                className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors border-b-2 ${activeTab === 'MATERIALS' ? 'border-emerald-500 text-emerald-400 bg-emerald-500/5' : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800'}`}
-                            >
-                                Historial Materiales
-                            </button>
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 overflow-auto p-6">
-                            {!historyData ? (
-                                <div className="flex items-center justify-center h-full text-slate-500 gap-2">
-                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                    Cargando historial...
-                                </div>
-                            ) : (
-                                <>
-                                    {activeTab === 'PAYMENTS' && (
-                                        <div className="space-y-4">
-                                            {historyData.records.length === 0 ? <p className="text-center text-slate-500 py-10">No hay registros de pagos aún.</p> : (
-                                                <table className="w-full text-left border-collapse">
-                                                    <thead className="text-xs uppercase text-slate-500 bg-slate-900/30 sticky top-0">
-                                                        <tr>
-                                                            <th className="p-3 rounded-tl-lg">Fecha</th>
-                                                            <th className="p-3">Metros</th>
-                                                            <th className="p-3 text-right rounded-tr-lg">Total Pagado (Neto)</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-slate-700/50">
-                                                        {historyData.records.map((rec, i) => (
-                                                            <tr key={i} className="hover:bg-slate-700/30">
-                                                                <td className="p-3 text-slate-300">{new Date(rec.date).toLocaleDateString()}</td>
-                                                                <td className="p-3 text-slate-300 font-mono">{rec.meters}m</td>
-                                                                <td className="p-3 text-right text-green-400 font-bold">{formatMoney(rec.total_amount)}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'ADVANCES' && (
-                                        <div className="space-y-4">
-                                            {historyData.advances.length === 0 ? <p className="text-center text-slate-500 py-10">Sin adelantos registrados.</p> : (
-                                                <div className="grid gap-3">
-                                                    {historyData.advances.map((adv, i) => (
-                                                        <div key={i} className="bg-slate-900/40 p-4 rounded-xl border border-slate-700 flex justify-between items-center">
-                                                            <div>
-                                                                <div className="text-amber-500 font-bold text-lg">{formatMoney(adv.amount)}</div>
-                                                                <div className="text-slate-400 text-sm">{adv.description || "Sin descripción"}</div>
-                                                            </div>
-                                                            <div className="text-right">
-                                                                <div className="text-xs text-slate-500">{new Date(adv.date).toLocaleDateString()}</div>
-                                                                <div className={`text-xs font-bold uppercase mt-1 px-2 py-1 rounded-full inline-block ${adv.is_settled ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                                                                    {adv.is_settled ? 'Saldado' : 'Pendiente'}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'MATERIALS' && (
-                                        <div className="space-y-4">
-                                            {historyData.material_usages.length === 0 ? <p className="text-center text-slate-500 py-10">No ha retirado materiales.</p> : (
-                                                <table className="w-full text-left border-collapse">
-                                                    <thead className="text-xs uppercase text-slate-500 bg-slate-900/30 sticky top-0">
-                                                        <tr>
-                                                            <th className="p-3 rounded-tl-lg">Fecha</th>
-                                                            <th className="p-3 text-right">Cantidad</th>
-                                                            <th className="p-3 rounded-tr-lg">Detalle</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-slate-700/50">
-                                                        {historyData.material_usages.map((usage, i) => (
-                                                            <tr key={i} className="hover:bg-slate-700/30">
-                                                                <td className="p-3 text-slate-300">{new Date(usage.date).toLocaleDateString()}</td>
-                                                                <td className="p-3 text-right text-blue-400 font-bold font-mono">{usage.quantity}</td>
-                                                                <td className="p-3 text-slate-400 text-sm">{usage.description}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            )}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </div>
-
-                        <div className="p-4 border-t border-slate-700 bg-slate-900 flex justify-end">
-                            <button onClick={() => setHistoryModalOpen(false)} className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold transition-colors">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
+            {/* Worker Profile 360 Modal */}
+            {historyModalOpen && selectedHistoryEmp && (
+                <WorkerProfile
+                    employeeId={selectedHistoryEmp.id}
+                    onClose={() => setHistoryModalOpen(false)}
+                />
             )}
         </div>
     );

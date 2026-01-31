@@ -8,14 +8,20 @@ import Reportes from './components/Reportes';
 import Stock from './components/Stock';
 import Configuracion from './components/Configuracion';
 import Personal from './components/Personal';
+import Operaciones from './components/Operaciones';
+import CalendarView from './components/CalendarView';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('operaciones'); // Default
 
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
         return <Dashboard />;
+      case 'operaciones':
+        return <Operaciones />;
+      case 'calendario':
+        return <CalendarView />;
       case 'movimientos':
         return <Historial />;
       case 'stock':

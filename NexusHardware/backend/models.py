@@ -11,6 +11,8 @@ class Product(Base):
     price = Column(Float)
     stock = Column(Integer)
     image_url = Column(String)
+    lead_time_days = Column(Integer, default=7)
+    monthly_sales_avg = Column(Integer, default=20)
 
 class Sale(Base):
     __tablename__ = "sales"

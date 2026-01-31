@@ -1,0 +1,2 @@
+/* Main index.css - Styles are now modularized in src/styles/ */
+@import "./styles/Globals.css";

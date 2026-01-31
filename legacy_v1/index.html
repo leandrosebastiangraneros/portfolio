@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>Leandro Graneros | IT Specialist & Web Developer</title>
+    <meta name="description"
+        content="Portfolio of Leandro Graneros, an IT Specialist and Web Developer based in La Plata, AR. Specialized in building scalable digital ecosystems.">
+    <meta name="keywords" content="IT Specialist, Web Developer, JavaScript, CSS, HTML, Portfolio, Leandro Graneros">
+    <meta name="author" content="Leandro Graneros">
+    <meta property="og:title" content="Leandro Graneros | IT Specialist & Web Developer">
+    <meta property="og:description"
+        content="Portfolio of Leandro Graneros, an IT Specialist and Web Developer based in La Plata, AR.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+</head>
+
+<body style="background-color: #000;">
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <canvas id="stars-canvas"></canvas>
+    <div class="atmosphere-overlay">
+        <div class="grain"></div>
+        <div class="scanlines"></div>
+    </div>
+
+
+    <!-- Mini Terminal (Ctrl+K): Una consola oculta invocable para navegación rápida -->
+    <div id="mini-terminal" class="terminal-hidden">
+        <div class="terminal-header">
+            <span>TERMINAL_V2.0.4</span>
+            <span class="close-terminal">ESC TO EXIT</span>
+        </div>
+        <div class="terminal-body" id="mini-terminal-output">
+            <div class="line">SYSTEM READY. TYPE 'HELP' FOR COMMANDS.</div>
+        </div>
+        <div class="terminal-input-line">
+            <span class="prompt">></span>
+            <input type="text" id="terminal-input" autofocus spellcheck="false">
+        </div>
+    </div>
+
+    <!-- Boot Sequence Overlay: Pantalla inicial de carga simulando ctOS 2.0 -->
+    <div id="boot-overlay">
+        <div class="loader-container">
+            <div class="loader-text">CARGANDO_SISTEMA<span class="blinking-cursor">_</span></div>
+            <div class="loader-bar-bg">
+                <div class="loader-bar-fill"></div>
+            </div>
+            <div class="loader-percent">00%</div>
+        </div>
+    </div>
+
+    <!-- HUD Overlay: Interfaz gráfica permanente (Heads-Up Display) con bordes y datos del sistema -->
+    <div class="hud-overlay">
+        <div class="hud-corners">
+            <div class="corner topleft"></div>
+            <div class="corner topright"></div>
+            <div class="corner bottomleft"></div>
+            <div class="corner bottomright"></div>
+        </div>
+        <div class="hud-data topleft-data">SYS.ONLINE</div>
+        <div class="hud-data bottomleft-data">COORDS: <span id="mouse-coords">000 - 000</span></div>
+        <div class="hud-data bottomright-data">VER 2.0.4</div>
+
+        <!-- Columna Social: Iconos de redes sociales fijados a la izquierda -->
+        <div class="social-column">
+            <div class="social-links-wrapper">
+                <a href="https://linkedin.com/in/leandro-graneros" target="_blank" class="social-link" title="LinkedIn"
+                    aria-label="LinkedIn Profile">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                </a>
+                <a href="https://github.com/leandrosebastiangraneros" target="_blank" class="social-link" title="GitHub"
+                    aria-label="GitHub Profile">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                </a>
+                <div class="social-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="navbar-wrapper">
+            <a href="#hero" class="logo">LG.</a>
+            <div class="nav-links">
+                <a href="#about">Resumen</a>
+                <a href="#skills">Habilidades</a>
+                <a href="#projects">Proyectos</a>
+                <a href="#contact">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div id="globe-container" class="hidden-element" aria-label="Mapa interactivo 3D de ubicación" role="img"></div>
+    <section id="hero" class="hero-section">
+        <div class="hero-content hidden-element">
+            <p class="subtitle">Hola, soy</p>
+            <h1 class="title">LEANDRO<br>
+                SEBASTIAN<br>
+                GRANEROS</h1>
+            <p class="role">IT SPECIALIST & WEB DEVELOPER</p>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="about-cascade-container professional-redesign hidden-element">
+            <h2 class="section-title">SYSTEM_PROFILE</h2>
+
+            <div class="about-intro dashboard-layout">
+                <div class="profile-column">
+                    <div class="holo-node bento-card solid-card" data-node="bio">
+                        <div class="tech-header">
+                            <span class="id-code">ID: LS-G-2026 // IT.SPECIALIST</span>
+                            <div class="status-badge"><span class="blink-dot"></span>ONLINE</div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="main-info">
+                                <h3 class="role-title">IT SPECIALIST<br>& DEV</h3>
+                                <p class="bio-text">
+                                    Specialized in building scalable digital ecosystems.
+                                    Bridging the gap between <strong>Fluid UX</strong> and <strong>Robust
+                                        Engineering</strong>.
+                                </p>
+                            </div>
+
+                            <div class="specs-column">
+                                <div class="spec-item">
+                                    <span class="label">YEARS_EXP</span>
+                                    <span class="value">05+</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="label">BASE_LOC</span>
+                                    <span class="value">LA PLATA, AR</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="label">FOCUS</span>
+                                    <span class="value">PERFORMANCE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-deco">
+                            <div class="barcode">||| || ||| ||</div>
+                            <div class="verified-stamp">SYS_VERIFIED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terminal-column">
+                    <div class="window-console dashboard-module">
+                        <div class="console-header">
+                            <div class="console-title">C:\WINDOWS\system32\cmd.exe</div>
+                            <div class="console-controls">
+                                <span>_</span>
+                                <span>□</span>
+                                <span class="close-btn">×</span>
+                            </div>
+                        </div>
+                        <div class="console-body">
+                            <div class="console-line"><span class="prompt">></span> <span
+                                    class="label">SYSTEM_USER:</span> <span class="value">Leandro Graneros</span></div>
+                            <div class="console-line"><span class="prompt">></span> <span class="label">CLASS:</span>
+                                <span class="value">IT Specialist & Web Developer</span>
+                            </div>
+                            <div class="console-line"><span class="prompt">></span> <span class="label">STATUS:</span>
+                                <span class="value">Online / Ingeniería en Sistemas (UTN)</span>
+                            </div>
+                            <br>
+                            <div class="console-line"><span class="prompt">></span> <span
+                                    class="label">PROFILE_SUMMARY:</span></div>
+                            <div class="console-text">
+                                Perfil híbrido con +5 años de trayectoria.<br>
+                                Combino la lógica de la ingeniería con la<br>
+                                resolución práctica del soporte técnico.<br>
+                                <br>
+                                Mi enfoque es simple: Crear sistemas que<br>
+                                funcionen, optimizar procesos que tardan<br>
+                                y solucionar problemas que frenan.
+                            </div>
+                            <br>
+                            <div class="console-line blink-line"><span class="prompt">></span> <span
+                                    class="value">SCROLL_DOWN_FOR_LOGS...</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="vertical-timeline-system">
+                <div class="timeline-main-line">
+                    <div class="timeline-active-fill"></div>
+                    <div class="timeline-scrolling-dot"></div>
+                </div>
+
+                <div class="timeline-entries">
+                    <div class="timeline-entry event-2020 left">
+                        <div class="entry-card solid-card">
+                            <span class="year">2020</span>
+                            <h3>Técnico en Computadoras</h3>
+                            <p>Ingreso al mundo IT como técnico de computadoras, brindando soporte y soluciones de
+                                hardware.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-entry event-2021 right">
+                        <div class="entry-card solid-card">
+                            <span class="year">2021</span>
+                            <h3>Experiencia Sistemas I</h3>
+                            <p>Consolidación de habilidades en soporte técnico y gestión de redes.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-entry event-2022 left">
+                        <div class="entry-card solid-card">
+                            <span class="year">2022</span>
+                            <h3>Optimización Operativa</h3>
+                            <p>Desarrollo de flujos de trabajo eficientes para la gestión de activos IT.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-entry event-2023 right">
+                        <div class="entry-card solid-card">
+                            <span class="year">2023</span>
+                            <h3>Automation & Scripts</h3>
+                            <p>Especialización en automatización mediante SQL y macros VBA.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-entry event-2024 left">
+                        <div class="entry-card solid-card">
+                            <span class="year">2024</span>
+                            <h3>Desarrollo Web Full Stack</h3>
+                            <p>Creación de aplicaciones web dinámicas y modernas.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-entry event-2025 right">
+                        <div class="entry-card solid-card">
+                            <span class="year">2025</span>
+                            <h3>Ingeniería en Sistemas (UTN)</h3>
+                            <p>Ingreso a la carrera universitaria para formalizar mi formación profesional en sistemas.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-entry event-2026 left">
+                        <div class="entry-card solid-card">
+                            <span class="year">2026</span>
+                            <h3>Digital Showcase</h3>
+                            <p>Desarrollo de proyectos profesionales para mostrar mis habilidades mientras sigo cursando
+                                ingeniería.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-footer">
+                <div class="holo-node node-cv bento-card solid-card" data-node="cv">
+                    <div class="node-header">04_SECURE_ACCESS</div>
+                    <div class="node-content download-focus">
+                        <p>Descarga el registro completo del sistema en formato PDF.</p>
+                        <a href="cv.pdf" download class="holo-download">
+                            DOWNLOAD_CV.V2.026
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="holo-grid-mask"></div>
+        </div>
+    </section>
+
+    <section id="skills" class="section dark-bg">
+        <div class="container hidden-element">
+            <h2 class="section-title inverted">System_Modules</h2>
+            <div class="skills-dashboard">
+                <div class="skill-module">
+                    <div class="module-meta"><span>MOD_01</span><span>[RUNNING]</span></div>
+                    <h3>Languages_Core</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 90%;"></div>
+                    </div>
+                    <p>JavaScript, C, SQL, Python (Básico), HTML5, CSS3, Assembler</p>
+                </div>
+                <div class="skill-module">
+                    <div class="module-meta"><span>MOD_02</span><span>[LOADED]</span></div>
+                    <h3>Software_&_Tools</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 95%;"></div>
+                    </div>
+                    <p>Excel (VBA/Macros), VS Code, Paquete Office, Gestión de Tickets</p>
+                </div>
+                <div class="skill-module">
+                    <div class="module-meta"><span>MOD_03</span><span>[SYNCED]</span></div>
+                    <h3>Design_Creative</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 85%;"></div>
+                    </div>
+                    <p>Adobe Photoshop (Avanzado), Canva, Diseño UI/UX Intermedio</p>
+                </div>
+                <div class="skill-module">
+                    <div class="module-meta"><span>MOD_04</span><span>[ACTIVE]</span></div>
+                    <h3>Support_Systems</h3>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 80%;"></div>
+                    </div>
+                    <p>Windows 10/11, Diagnóstico Hardware, Redes LAN/WLAN</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container hidden-element">
+            <h2 class="section-title">Secure_Archives</h2>
+            <div class="projects-vault">
+                <!-- PROYECTO 1: Fortnite Monitor -->
+                <a href="FortniteLatencyMonitor/index.html" class="vault-item">
+                    <div class="card-strip">
+                        <span>UID: PING-MON-001</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>MONITOR_DE_LATENCIA.exe</h3>
+                        <p>Herramienta de diagnóstico de red para monitorear latencia y pérdida de paquetes en tiempo
+                            real.</p>
+
+                        <div class="item-meta">
+                            <span>TYPE: DIAGNOSTIC</span>
+                            <span>STATUS: STABLE</span>
+                        </div>
+
+                        <div class="tech-stack">
+                            <i class="devicon-python-plain" title="Python"></i>
+                            <i class="devicon-tkinter-plain" title="Tkinter"></i>
+                            <i class="devicon-amazonwebservices-plain-wordmark" title="AWS"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- PROYECTO 2: Key Visualizer -->
+                <a href="KeyResponseVisualizer/index.html" class="vault-item">
+                    <div class="card-strip">
+                        <span>UID: INPUT-VIS-002</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>KEY_RESPONSE_VISUALIZER.js</h3>
+                        <p>Visualizador interactivo de eventos de teclado DOM para análisis de input lag y ghosting.</p>
+
+                        <div class="item-meta">
+                            <span>TYPE: UTILITY</span>
+                            <span>STATUS: ACTIVE</span>
+                        </div>
+
+                        <div class="tech-stack">
+                            <i class="devicon-javascript-plain" title="JavaScript"></i>
+                            <i class="devicon-html5-plain" title="HTML5"></i>
+                            <i class="devicon-css3-plain" title="CSS3"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- PROYECTO 3: Nexus Hardware -->
+                <a href="NexusHardware/frontend/dist/index.html" class="vault-item">
+                    <div class="card-strip">
+                        <span>UID: NEXUS-STORE-003</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>NEXUS_HARDWARE_STORE.app</h3>
+                        <p>E-commerce completo con carrito, dashboard de ventas y gestión de stock en tiempo real.</p>
+
+                        <div class="item-meta">
+                            <span>TYPE: E-COMMERCE</span>
+                            <span>STATUS: DEPLOYED</span>
+                        </div>
+
+                        <div class="tech-stack">
+                            <i class="devicon-react-original" title="React"></i>
+                            <i class="devicon-tailwindcss-original" title="Tailwind"></i>
+                            <i class="devicon-fastapi-plain" title="FastAPI"></i>
+                            <i class="devicon-postgresql-plain" title="PostgreSQL"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- PROYECTO 4: Data Automation -->
+                <a href="#projects" class="vault-item">
+                    <div class="card-strip">
+                        <span>UID: DATA-AUTO-VBA</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Data_Automation.exe</h3>
+                        <p>Motor de optimización de stock (C + Python). Ahora integrado nativamente en <strong>Nexus
+                                Hardware</strong>.</p>
+
+                        <div class="item-meta">
+                            <span>TYPE: ALGORITHM</span>
+                            <span>STATUS: INTEGRATED</span>
+                        </div>
+
+                        <div class="tech-stack">
+                            <i class="devicon-python-plain" title="Python"></i>
+                            <i class="devicon-c-plain" title="C"></i>
+                            <i class="devicon-microsoftsqlserver-plain" title="SQL"></i>
+                        </div>
+                    </div>
+                </a>
+                </a>
+
+                <!-- PROYECTO 5: NovaManager -->
+                <a href="NovaManager/frontend/landing.html" class="vault-item" target="_blank">
+                    <div class="card-strip">
+                        <span>UID: NOVAMANAGER-V1</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>NOVAMANAGER_SYSTEM.app</h3>
+                        <p>Sistema integral de gestión para contratistas: Finanzas, Stock y Personal en real-time.
+                        </p>
+
+                        <div class="item-meta">
+                            <span>TYPE: MANAGEMENT</span>
+                            <span>STATUS: ONLINE</span>
+                        </div>
+
+                        <div class="tech-stack">
+                            <i class="devicon-python-plain" title="Python"></i>
+                            <i class="devicon-react-original" title="React"></i>
+                            <i class="devicon-sqlite-plain" title="SQLite"></i>
+                            <i class="devicon-tailwindcss-original" title="Tailwind"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section dark-bg">
+        <div class="container hidden-element">
+            <h2 class="section-title inverted">Communications_Array</h2>
+            <div class="communications-wrapper">
+                <div class="comm-card">
+                    <div class="card-strip">
+                        <span>UID: CONTACT-01</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>UPLINK_ESTABLISHED</h3>
+                        <p>Canal seguro abierto. Iniciando protocolo de transmisión de datos. Esperando input del
+                            usuario.</p>
+
+                        <div class="comm-actions">
+                            <a href="mailto:leandro.graneros@alu.frlp.utn.edu.ar" class="comm-btn main-action">
+                                <i class="fa-solid fa-paper-plane"></i> INICIAR_TRANSMISIÓN
+                            </a>
+                        </div>
+
+                        <div class="social-nodes">
+                            <a href="https://linkedin.com/in/leandro-graneros" target="_blank" rel="noopener noreferrer"
+                                class="social-node">
+                                <div class="node-icon"><i class="fa-brands fa-linkedin"></i></div>
+                                <div class="node-data">
+                                    <span class="label">LINKEDIN</span>
+                                    <span class="value">CONNECTED</span>
+                                </div>
+                            </a>
+                            <a href="https://github.com/leandrosebastiangraneros" target="_blank"
+                                rel="noopener noreferrer" class="social-node">
+                                <div class="node-icon"><i class="fa-brands fa-github"></i></div>
+                                <div class="node-data">
+                                    <span class="label">GITHUB</span>
+                                    <span class="value">SYNCED</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="comm-status">
+                            <span>SECTOR: LA_PLATA_AR</span>
+                            <span>ENCRYPTION: 128-BIT</span>
+                            <span>STATUS: <span class="blink-text">ONLINE</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>

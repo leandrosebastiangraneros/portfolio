@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDialog } from '../context/DialogContext';
 import { API_URL } from '../config';
+import ConfigPanel from './ConfigPanel';
 
 const Configuracion = () => {
     const [loading, setLoading] = useState(false);
@@ -42,6 +43,9 @@ const Configuracion = () => {
                 <h1 className="text-3xl font-bold">Configuración</h1>
                 <p className="text-slate-400">Ajustes generales del sistema.</p>
             </header>
+
+            {/* Nuevo Panel de Precios Globales */}
+            <ConfigPanel />
 
             <div className="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-8">
                 <section className="space-y-4">

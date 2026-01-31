@@ -1,9 +1,12 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 from typing import List
 from datetime import datetime, timedelta
+import os
+import shutil
 
 import models, schemas
 import reports
@@ -336,6 +339,11 @@ def create_employee(emp: schemas.EmployeeCreate, db: Session = Depends(get_db)):
     db.refresh(db_emp)
     return db_emp
 
+@app.get("/employees", response_model=List[schemas.Employee])
+def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return db.query(models.Employee).offset(skip).limit(limit).all()
+
+
 @app.delete("/employees/{emp_id}")
 def delete_employee(emp_id: int, db: Session = Depends(get_db)):
     db_emp = db.query(models.Employee).filter(models.Employee.id == emp_id).first()
@@ -460,10 +468,483 @@ def get_employee_history(empid: int, db: Session = Depends(get_db)):
     if not db_emp:
         raise HTTPException(status_code=404, detail="Employee not found")
     
+    # 1. Fetch Trip Assignments (New System)
+    trip_assigns = db.query(models.TripEmployee).join(models.WorkTrip).filter(
+        models.TripEmployee.employee_id == empid,
+        models.WorkTrip.status == "CLOSED" # Only count closed/confirmed trips
+    ).all()
+    
+    history_trips = []
+    total_earned = 0.0
+    for ta in trip_assigns:
+        total_earned += ta.total_earned
+        history_trips.append({
+            "trip_id": ta.trip.id,
+            "date": ta.trip.date,
+            "trip_description": ta.trip.description,
+            "meters_done": ta.meters_done,
+            "historical_price": ta.historical_price,
+            "total_earned": ta.total_earned
+        })
+        
+    # 2. Fetch Attendance Log
+    attendance = db.query(models.DailyAttendance).filter(
+        models.DailyAttendance.employee_id == empid
+    ).order_by(models.DailyAttendance.date.desc()).limit(60).all() # Last 60 days
+    
+    # 3. Calculate Advances (Legacy + New)
+    total_advances = sum(a.amount for a in db_emp.advances if not a.is_settled)
+    
     return {
         "employee_id": db_emp.id,
         "name": db_emp.name,
         "records": db_emp.records,
         "advances": db_emp.advances,
-        "material_usages": db_emp.material_usages
+        "material_usages": db_emp.material_usages,
+        
+        "trip_assignments": history_trips,
+        "attendance_log": attendance,
+        
+        "balance_earned": total_earned,
+        "balance_advances": total_advances,
+        "net_payable": total_earned - total_advances
     }
+
+@app.get("/calendar/events")
+def get_calendar_events(month: int = None, year: int = None, db: Session = Depends(get_db)):
+    """
+    Returns finalized trips formatted for calendar view.
+    """
+    query = db.query(models.WorkTrip).filter(models.WorkTrip.status == "CLOSED")
+         
+    trips = query.all()
+    events = []
+    
+    for t in trips:
+        # Calculate totals for summary
+        total_meters = sum(a.meters_done for a in t.assignments)
+        total_materials = len(t.materials)
+        
+        events.append({
+            "id": t.id,
+            "title": t.description,
+            "start": t.date,
+            "end": t.date,
+            "allDay": True,
+            "extendedProps": {
+                "meters": total_meters,
+                "driver_count": len(t.assignments),
+                "materials_count": total_materials
+            }
+        })
+        
+    return events
+
+# --- NOVA MANAGER 2.0 ENDPOINTS ---
+
+# 1. System Config (Meter Price)
+@app.get("/config/{key}", response_model=schemas.SystemConfig)
+def get_system_config(key: str, db: Session = Depends(get_db)):
+    config = db.query(models.SystemConfig).filter(models.SystemConfig.key == key).first()
+    if not config:
+        # Return default if not found
+        return schemas.SystemConfig(key=key, value="0", updated_at=datetime.now())
+    return config
+
+@app.post("/config", response_model=schemas.SystemConfig)
+def set_system_config(config: schemas.SystemConfigBase, db: Session = Depends(get_db)):
+    db_config = db.query(models.SystemConfig).filter(models.SystemConfig.key == config.key).first()
+    if db_config:
+        db_config.value = config.value
+    else:
+        db_config = models.SystemConfig(key=config.key, value=config.value)
+        db.add(db_config)
+    
+    db.commit()
+    db.refresh(db_config)
+    return db_config
+
+# 2. Daily Attendance
+@app.post("/attendance/bulk", response_model=List[schemas.DailyAttendance])
+def save_daily_attendance(attendances: List[schemas.DailyAttendanceCreate], db: Session = Depends(get_db)):
+    """
+    Recibe una lista de estados (Presente/Ausente) para una fecha.
+    Realiza UPSERT: Si ya existe registro para ese empleado y fecha, actualiza. Si no, crea.
+    """
+    saved_records = []
+    
+    for item in attendances:
+        # Default date to Today if not provided
+        target_date = item.date or datetime.now()
+        start_of_day = datetime(target_date.year, target_date.month, target_date.day)
+        end_of_day = start_of_day + timedelta(days=1)
+        
+        # Check existing record for this day
+        existing = db.query(models.DailyAttendance).filter(
+            models.DailyAttendance.employee_id == item.employee_id,
+            models.DailyAttendance.date >= start_of_day,
+            models.DailyAttendance.date < end_of_day
+        ).first()
+        
+        if existing:
+            existing.is_present = item.is_present
+            saved_records.append(existing)
+        else:
+            new_record = models.DailyAttendance(
+                employee_id=item.employee_id,
+                is_present=item.is_present,
+                date=target_date
+            )
+            db.add(new_record)
+            saved_records.append(new_record)
+    
+    db.commit()
+    # Refresh all to get IDs
+    for r in saved_records:
+        db.refresh(r)
+    return saved_records
+
+@app.get("/attendance/{date_str}", response_model=List[schemas.DailyAttendance])
+def get_daily_attendance(date_str: str, db: Session = Depends(get_db)):
+    """
+    Get attendance for a specific date (YYYY-MM-DD).
+    If no record exists for an employee, it is NOT returned here (frontend handles 'default false').
+    """
+    try:
+        target_date = datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+        
+    start_of_day = datetime(target_date.year, target_date.month, target_date.day)
+    end_of_day = start_of_day + timedelta(days=1)
+    
+    records = db.query(models.DailyAttendance).filter(
+        models.DailyAttendance.date >= start_of_day,
+        models.DailyAttendance.date < end_of_day
+    ).all()
+    
+    return records
+
+# 3. Work Trips (Salida)
+@app.post("/trips", response_model=schemas.WorkTrip)
+def create_work_trip(trip: schemas.WorkTripCreate, db: Session = Depends(get_db)):
+    # 1. Get Current Meter Price Global
+    price_config = db.query(models.SystemConfig).filter(models.SystemConfig.key == "meter_price").first()
+    current_price = float(price_config.value) if price_config else 0.0
+    
+    # 2. Create the Trip Header
+    db_trip = models.WorkTrip(
+        date=trip.date or datetime.now(),
+        description=trip.description,
+        status="OPEN"
+    )
+    db.add(db_trip)
+    db.flush() # Get ID
+    
+    # 3. Assign Assignments (People)
+    for emp in trip.employees:
+        db_assign = models.TripEmployee(
+            trip_id=db_trip.id,
+            employee_id=emp.employee_id,
+            is_present=emp.is_present,
+            historical_price=current_price, # Snapshot Price
+            meters_done=0.0,
+            total_earned=0.0
+        )
+        db.add(db_assign)
+        
+    # 4. Assign Materials (Logistics)
+    for mat in trip.materials:
+        # Check Stock availability (Optional: Allow negative if urgent?)
+        # For now, we just record "Llevado - quantity_out"
+        db_mat = models.TripMaterial(
+            trip_id=db_trip.id,
+            stock_item_id=mat.stock_item_id,
+            quantity_out=mat.quantity_out,
+            quantity_returned=0.0,
+            quantity_used=0.0 
+        )
+        db.add(db_mat)
+        
+        # Deduct temporary stock? 
+        # Strategy: We deduct it from Main Stock immediately. 
+        # When returning, we add back the *returned* amount. 
+        # Then the net result is correct (Main - Out + Returned = Main - Used).
+        stock_item = db.query(models.StockItem).filter(models.StockItem.id == mat.stock_item_id).first()
+        if stock_item:
+            stock_item.quantity -= mat.quantity_out
+    
+    db.commit()
+    db.refresh(db_trip)
+    return db_trip
+
+@app.get("/trips", response_model=List[schemas.WorkTrip])
+def get_work_trips(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
+    return db.query(models.WorkTrip).order_by(models.WorkTrip.date.desc()).offset(skip).limit(limit).all()
+
+@app.post("/trips/{trip_id}/close", response_model=schemas.WorkTrip)
+def close_work_trip(trip_id: int, close_data: schemas.TripCloseRequest, db: Session = Depends(get_db)):
+    # 1. Get Trip
+    trip = db.query(models.WorkTrip).filter(models.WorkTrip.id == trip_id).first()
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found")
+    if trip.status == "CLOSED":
+        raise HTTPException(status_code=400, detail="Trip already closed")
+
+    # 2. Get Current Price for Snapshot
+    price_config = db.query(models.SystemConfig).filter(models.SystemConfig.key == "meter_price").first()
+    current_price = float(price_config.value) if price_config else 0.0
+
+    # 3. Process Materials (Logistics) - Add back returned stock
+    for mat_update in close_data.materials:
+        # Find the trip_material record
+        tm = next((m for m in trip.materials if m.id == mat_update.id), None)
+        if tm:
+            tm.quantity_returned = mat_update.quantity_returned
+            tm.quantity_used = max(0, tm.quantity_out - tm.quantity_returned)
+            
+            # Restore stock
+            if tm.stock_item:
+                 tm.stock_item.quantity += tm.quantity_returned
+    
+    # 4. Process Employees (Payroll) - Calculate earnings
+    for emp_update in close_data.employees:
+        te = next((e for e in trip.assignments if e.id == emp_update.id), None)
+        if te:
+            te.meters_done = emp_update.meters_done
+            te.historical_price = current_price
+            te.total_earned = te.meters_done * current_price
+            
+            # FUTURE: Here we could automatically create 'PayrollRecord' to sync with legacy system
+            # but for now we keep it separate as requested in architecture plan.
+
+    # 5. Close Trip
+    trip.status = "CLOSED"
+    db.commit()
+    db.refresh(trip)
+    return trip
+
+@app.put("/trips/{trip_id}/progress", response_model=schemas.WorkTrip)
+def update_trip_progress(trip_id: int, progress_data: schemas.TripCloseRequest, db: Session = Depends(get_db)):
+    # 1. Get Trip
+    trip = db.query(models.WorkTrip).filter(models.WorkTrip.id == trip_id).first()
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found")
+    if trip.status == "CLOSED":
+        raise HTTPException(status_code=400, detail="Trip already closed")
+
+    # 2. Get Current Price (for estimation display, though realized on close)
+    price_config = db.query(models.SystemConfig).filter(models.SystemConfig.key == "meter_price").first()
+    current_price = float(price_config.value) if price_config else 0.0
+
+    # 3. Process Employees (Update Meters & Potential Earnings)
+    for emp_update in progress_data.employees:
+        te = next((e for e in trip.assignments if e.id == emp_update.id), None)
+        if te:
+            te.meters_done = emp_update.meters_done
+            # We update the potential earnings display, but actual financial record is on Close
+            te.total_earned = te.meters_done * current_price
+
+    # 4. Save (Status remains OPEN)
+    db.commit()
+    db.refresh(trip)
+    return trip
+
+# --- ARCA - ADMINISTRATION & REPORTS ---
+
+@app.post("/expenses/upload", response_model=schemas.ExpenseDocument)
+async def upload_expense(
+    description: str,
+    amount: float,
+    date: str = None, # YYYY-MM-DD
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    # 1. Create Directory Structure: storage/comprobantes/YYYY/MM
+    expense_date = datetime.strptime(date, "%Y-%m-%d") if date else datetime.now()
+    year_str = expense_date.strftime("%Y")
+    month_str = expense_date.strftime("%m")
+    
+    upload_dir = f"storage/comprobantes/{year_str}/{month_str}"
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    # 2. Save File
+    file_ext = file.filename.split('.')[-1]
+    safe_filename = f"{int(datetime.now().timestamp())}_{file.filename.replace(' ', '_')}"
+    file_path = f"{upload_dir}/{safe_filename}"
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    # 3. Create DB Record
+    db_doc = models.ExpenseDocument(
+        description=description,
+        amount=amount,
+        date=expense_date,
+        file_path=file_path,
+        file_type=file_ext
+    )
+    db.add(db_doc)
+    db.commit()
+    db.refresh(db_doc)
+    
+    return db_doc
+
+@app.get("/expenses", response_model=List[schemas.ExpenseDocument])
+def get_expenses(month: int = None, year: int = None, db: Session = Depends(get_db)):
+    query = db.query(models.ExpenseDocument)
+    if month and year:
+        # Simple Filter Logic (In prod database use extract)
+        # For SQLite strings we can filter mostly by range
+        start_date = datetime(year, month, 1)
+        if month == 12:
+            end_date = datetime(year + 1, 1, 1)
+        else:
+             end_date = datetime(year, month + 1, 1)
+             
+        query = query.filter(models.ExpenseDocument.date >= start_date, models.ExpenseDocument.date < end_date)
+        
+    return query.order_by(models.ExpenseDocument.date.desc()).all()
+
+@app.get("/finances/summary")
+def get_financial_summary(month: int = None, year: int = None, db: Session = Depends(get_db)):
+    # Defaults to current month
+    if not month or not year:
+        now = datetime.now()
+        month = now.month
+        year = now.year
+        
+    start_date = datetime(year, month, 1)
+    if month == 12:
+        end_date = datetime(year + 1, 1, 1)
+    else:
+        end_date = datetime(year, month + 1, 1)
+        
+    # 1. Labor Costs (From Closed Trips + Advances?? No, usually just Production Value)
+    # Strategy: Sum 'total_earned' from TripAssignments in Closed Trips this month
+    labor_query = db.query(func.sum(models.TripEmployee.total_earned)).join(models.WorkTrip).filter(
+        models.WorkTrip.status == "CLOSED",
+        models.WorkTrip.date >= start_date,
+        models.WorkTrip.date < end_date
+    )
+    labor_cost = labor_query.scalar() or 0.0
+    
+    # 2. Expenses
+    expense_query = db.query(func.sum(models.ExpenseDocument.amount)).filter(
+        models.ExpenseDocument.date >= start_date,
+        models.ExpenseDocument.date < end_date
+    )
+    expense_cost = expense_query.scalar() or 0.0
+    
+    return {
+        "period": f"{month}/{year}",
+        "labor_cost": labor_cost,
+        "expense_cost": expense_cost,
+        "total_cost": labor_cost + expense_cost
+    }
+
+@app.get("/reports/accounting/pdf")
+def generate_accounting_report(month: int, year: int, db: Session = Depends(get_db)):
+    # Fetch Data
+    start_date = datetime(year, month, 1)
+    if month == 12:
+        end_date = datetime(year + 1, 1, 1)
+    else:
+        end_date = datetime(year, month + 1, 1)
+        
+    # Payroll Data (Grouped by Employee)
+    employees = db.query(models.Employee).all()
+    payroll_rows = []
+    total_payroll = 0.0
+    
+    for emp in employees:
+        # Get production for this month
+        prod = db.query(func.sum(models.TripEmployee.total_earned), func.sum(models.TripEmployee.meters_done)).join(models.WorkTrip).filter(
+            models.TripEmployee.employee_id == emp.id,
+            models.WorkTrip.status == "CLOSED",
+            models.WorkTrip.date >= start_date,
+            models.WorkTrip.date < end_date
+        ).first()
+        
+        earned = prod[0] or 0.0
+        meters = prod[1] or 0.0
+        
+        if earned > 0:
+            payroll_rows.append([emp.name, f"{meters:.2f}m", f"${earned:,.2f}"])
+            total_payroll += earned
+            
+    # Expenses Data
+    expenses = db.query(models.ExpenseDocument).filter(
+        models.ExpenseDocument.date >= start_date,
+        models.ExpenseDocument.date < end_date
+    ).order_by(models.ExpenseDocument.date).all()
+    
+    expense_rows = []
+    total_expenses = 0.0
+    for exp in expenses:
+        expense_rows.append([
+            exp.date.strftime("%d/%m/%Y"), 
+            exp.description[:40], 
+            f"${exp.amount:,.2f}"
+        ])
+        total_expenses += exp.amount
+
+    # --- PDF GENERATION ---
+    filename = f"Reporte_Contable_{year}_{month}.pdf"
+    filepath = f"storage/{filename}"
+    
+    doc = SimpleDocTemplate(filepath, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Header
+    elements.append(Paragraph(f"<b>NovaManager - Reporte Contable</b>", styles['Title']))
+    elements.append(Paragraph(f"Período: {month}/{year}", styles['Normal']))
+    elements.append(Spacer(1, 20))
+    
+    # Section 1: Payroll
+    elements.append(Paragraph(f"<b>1. Nómina / Producción ({len(payroll_rows)} Empleados)</b>", styles['Heading2']))
+    if payroll_rows:
+        data = [["Empleado", "Producción", "A Pagar"]] + payroll_rows
+        t = Table(data, colWidths=[200, 100, 100])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.grey),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0,0), (-1,0), 12),
+            ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ]))
+        elements.append(t)
+        elements.append(Paragraph(f"<b>Total Nómina: ${total_payroll:,.2f}</b>", styles['Normal']))
+    else:
+         elements.append(Paragraph("Sin actividad registrada.", styles['Normal']))
+         
+    elements.append(Spacer(1, 20))
+    
+    # Section 2: Expenses
+    elements.append(Paragraph(f"<b>2. Gastos Operativos ({len(expenses)})</b>", styles['Heading2']))
+    if expense_rows:
+        data = [["Fecha", "Descripción", "Monto"]] + expense_rows
+        t = Table(data, colWidths=[80, 220, 100])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.grey),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0,0), (-1,0), 12),
+            ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ]))
+        elements.append(t)
+        elements.append(Paragraph(f"<b>Total Gastos: ${total_expenses:,.2f}</b>", styles['Normal']))
+    else:
+        elements.append(Paragraph("Sin gastos registrados.", styles['Normal']))
+        
+    elements.append(Spacer(1, 30))
+    
+    # Footer
+    elements.append(Paragraph(f"<b>TOTAL GENERAL DEL PERÍODO: ${(total_payroll + total_expenses):,.2f}</b>", styles['Heading1']))
+    
+    doc.build(elements)
+    
+    return FileResponse(filepath, filename=filename, media_type='application/pdf')

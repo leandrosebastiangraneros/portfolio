@@ -104,7 +104,7 @@ class EmployeeRecordBase(BaseModel):
 
 class EmployeeBase(BaseModel):
     name: str
-    group_id: int
+    group_id: Optional[int] = None
 
 class EmployeeCreate(EmployeeBase):
     pass
@@ -131,12 +131,133 @@ class EmployeeGroup(EmployeeGroupBase):
         from_attributes = True
 
 # --- HISTORY ---
+class TripEmployeeHistory(BaseModel):
+    trip_id: int
+    date: datetime
+    trip_description: str
+    meters_done: float
+    historical_price: float
+    total_earned: float
+    class Config:
+        from_attributes = True
+
+class AttendanceHistory(BaseModel):
+    date: datetime
+    is_present: bool
+    class Config:
+        from_attributes = True
+
 class EmployeeHistory(BaseModel):
     employee_id: int
     name: str
-    records: List[PayrollRecord] = []
+    records: List[PayrollRecord] = [] # Legacy
     advances: List[Advance] = []
     material_usages: List[MaterialUsage] = []
     
+    # New Fields
+    trip_assignments: List[TripEmployeeHistory] = []
+    attendance_log: List[AttendanceHistory] = []
+    
+    # Computed Financials
+    balance_earned: float = 0.0 # Total Earned (Trips)
+    balance_advances: float = 0.0 # Total Advances
+    net_payable: float = 0.0 # Earned - Advances
+
+    class Config:
+        from_attributes = True
+
+# --- NOVA MANAGER 2.0 SCHEMAS ---
+
+class SystemConfigBase(BaseModel):
+    key: str
+    value: str
+
+class SystemConfig(SystemConfigBase):
+    updated_at: datetime
+    class Config:
+        from_attributes = True
+
+class DailyAttendanceCreate(BaseModel):
+    employee_id: int
+    is_present: bool
+    date: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+class DailyAttendance(DailyAttendanceCreate):
+    id: int
+    class Config:
+        from_attributes = True
+
+# 3. Work Trips (Salidas)
+class TripEmployeeBase(BaseModel):
+    employee_id: int
+    is_present: bool = True # En la salida generalmente van presentes
+
+class TripEmployee(TripEmployeeBase):
+    id: int
+    meters_done: float
+    total_earned: float
+    historical_price: float
+    class Config:
+        from_attributes = True
+
+class TripMaterialBase(BaseModel):
+    stock_item_id: int
+    quantity_out: float
+
+class TripMaterial(TripMaterialBase):
+    id: int
+    quantity_returned: float
+    quantity_used: float
+    class Config:
+        from_attributes = True
+
+class WorkTripCreate(BaseModel):
+    date: Optional[datetime] = None
+    description: str
+    employees: List[TripEmployeeBase]
+    materials: List[TripMaterialBase]
+
+class WorkTrip(BaseModel):
+    id: int
+    date: datetime
+    description: str
+    status: str
+    assignments: List[TripEmployee] = []
+    materials: List[TripMaterial] = []
+    
+    class Config:
+        from_attributes = True
+
+class TripEmployeeUpdate(BaseModel):
+    id: int
+    meters_done: float
+
+class TripMaterialUpdate(BaseModel):
+    id: int
+    quantity_returned: float
+
+class TripCloseRequest(BaseModel):
+    employees: List[TripEmployeeUpdate]
+    materials: List[TripMaterialUpdate]
+    final_meter_reading: float = 0 # Optional validation
+    class Config:
+        from_attributes = True
+
+# --- EXPENSES (ARCA) ---
+class ExpenseDocumentBase(BaseModel):
+    description: str
+    amount: float
+    date: Optional[datetime] = None
+
+class ExpenseDocumentCreate(ExpenseDocumentBase):
+    pass
+
+class ExpenseDocument(ExpenseDocumentBase):
+    id: int
+    file_path: str
+    file_type: str
     class Config:
         from_attributes = True

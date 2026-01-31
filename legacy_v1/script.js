@@ -127,40 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- EFECTO DE TEXTO DE DESENCRIPTACIÓN ---
-    const hackerChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    function decryptText(element, originalText) {
-        let iteration = 0;
-        const interval = setInterval(() => {
-            const currentText = originalText
-                .split('')
-                .map((letter, index) => {
-                    if (index < iteration) {
-                        return originalText[index];
-                    }
-                    if (letter === ' ' || letter === '\n') return letter;
-                    return hackerChars[Math.floor(Math.random() * hackerChars.length)];
-                })
-                .join('');
-
-            element.innerHTML = currentText.replace(/\n/g, '<br>');
-
-            if (iteration >= originalText.length) {
-                clearInterval(interval);
-            }
-
-            iteration += 1 / 2;
-        }, 30);
-    }
-
-    const animatedElements = document.querySelectorAll('.subtitle, .title, .role, .btn');
-    animatedElements.forEach(el => {
-        const originalText = el.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim();
-        setTimeout(() => {
-            decryptText(el, originalText);
-        }, 500);
-    });
+    // --- EFECTO DE TEXTO DE DESENCRIPTACIÓN ELIMINADO ---
+    // La animación ahora es manejada por CSS (fade-in-up) para mayor elegancia.
 
     // --- IMPLEMENTACIÓN DEL GLOBO THREE.JS ---
     const globeContainer = document.getElementById('globe-container');

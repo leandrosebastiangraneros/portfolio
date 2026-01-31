@@ -1,0 +1,258 @@
+/* HUD & Navbar Styles */
+
+.hud-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-nav);
+    pointer-events: none;
+    padding: 2rem;
+}
+
+/* Corner Highlights */
+.hud-corners .corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.hud-corners .topleft {
+    top: 2rem;
+    left: 2rem;
+    border-right: none;
+    border-bottom: none;
+}
+
+.hud-corners .topright {
+    top: 2rem;
+    right: 2rem;
+    border-left: none;
+    border-bottom: none;
+}
+
+.hud-corners .bottomleft {
+    bottom: 2rem;
+    left: 2rem;
+    border-right: none;
+    border-top: none;
+}
+
+.hud-corners .bottomright {
+    bottom: 2rem;
+    right: 2rem;
+    border-left: none;
+    border-top: none;
+}
+
+/* Metadata Labels */
+.hud-data {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.topleft-data {
+    top: 8rem;
+    left: 4rem;
+}
+
+.bottomleft-data {
+    bottom: 2.3rem;
+    left: 4.5rem;
+}
+
+.bottomright-data {
+    bottom: 2.3rem;
+    right: 2rem;
+}
+
+@media (max-width: 1024px) {
+
+    .hud-corners,
+    .hud-data {
+        display: none;
+    }
+}
+
+.hud-overlay .logo {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.2rem;
+    pointer-events: auto;
+}
+
+/* Navbar - Pill Aesthetic Centered at Top */
+.navbar {
+    position: fixed;
+    top: 1.5rem;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5%;
+    z-index: var(--z-nav);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(-20px);
+}
+
+.navbar.content-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.navbar-wrapper {
+    background: rgba(17, 17, 17, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.6rem 2rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 400;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.nav-links a:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #fff;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.logo {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 950;
+    text-decoration: none;
+    color: #fff;
+    letter-spacing: -1px;
+    transition: opacity 0.3s;
+}
+
+.logo:hover {
+    opacity: 0.7;
+}
+
+/* Social Column - Repositioned to Bottom Left */
+.social-column {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: var(--z-nav);
+    pointer-events: auto;
+}
+
+.social-links-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.social-link {
+    color: #fff;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-link:hover {
+    opacity: 1;
+    transform: scale(1.2) translateY(-3px);
+}
+
+.social-link svg {
+    width: 100%;
+    height: 100%;
+}
+
+.social-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+}
+
+@media (max-width: 768px) {
+    .hud-overlay {
+        padding: 1rem;
+    }
+
+    .navbar {
+        top: 1rem;
+    }
+
+    .navbar-wrapper {
+        padding: 0.5rem 1.2rem;
+        gap: 1.5rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+
+    .social-column {
+        bottom: 1rem;
+        left: 1rem;
+    }
+
+    .social-line {
+        height: 30px;
+    }
+}

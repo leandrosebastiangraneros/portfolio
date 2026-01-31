@@ -1,0 +1,691 @@
+/* --- Advanced About, Bento & Futuristic Timeline --- */
+.section {
+    padding: 12vh 5%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: var(--z-base);
+    background: transparent;
+}
+
+.about-cascade-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* --- Section Titles --- */
+.section-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    margin-bottom: 4rem;
+    color: #fff;
+    font-family: var(--font-primary);
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.section-title::before {
+    content: "SEC-02";
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 4px;
+}
+
+/* --- Dashboard Bento Grid --- */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2rem;
+    margin-bottom: 6rem;
+}
+
+.bento-card {
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.bento-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    background: rgba(15, 15, 15, 0.6);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+}
+
+/* Restored & Enhanced Profile Card Styles */
+.holo-node.bento-card {
+    border-color: rgba(0, 240, 255, 0.15);
+    /* Subtle cyan tint for the main node */
+}
+
+.tech-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    font-family: var(--font-mono);
+}
+
+.id-code {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.65rem;
+    background: rgba(0, 240, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 30px;
+    color: #00f0ff;
+    font-weight: 700;
+    border: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.blink-dot {
+    width: 6px;
+    height: 6px;
+    background: #00f0ff;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #00f0ff;
+    animation: blink 1.5s infinite;
+}
+
+.profile-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    /* Improved alignment for bento grid profile */
+    gap: 4rem;
+    margin-top: 1rem;
+}
+
+.role-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 0.95;
+    margin-bottom: 2rem;
+    letter-spacing: -2px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.bio-text {
+    font-size: 1.1rem;
+    opacity: 0.5;
+    max-width: 550px;
+    line-height: 1.8;
+}
+
+.bio-text strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.specs-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-width: 180px;
+    padding-left: 2rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.spec-item .label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.spec-item .value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.card-footer-deco {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 2px;
+}
+
+/* --- Terminal Console (Minimalist Redesign) --- */
+.console-header {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.console-body {
+    padding: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.prompt {
+    color: #00f0ff;
+    margin-right: 12px;
+}
+
+/* --- FUTURISTIC TIMELINE SYSTEM --- */
+.vertical-timeline-system {
+    position: relative;
+    padding: 120px 0;
+    margin-top: 4rem;
+}
+
+.timeline-main-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateX(-50%);
+}
+
+.timeline-active-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to bottom,
+            transparent,
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 255, 255, 1),
+            rgba(255, 255, 255, 0.6),
+            transparent);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+.timeline-scrolling-dot {
+    position: absolute;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px #fff, 0 0 100px rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.timeline-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+}
+
+.timeline-entry {
+    width: 44%;
+    position: relative;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0.3;
+    filter: blur(2px) grayscale(100%);
+    transform: scale(0.95);
+}
+
+/* FOCUS STATE (IntersectionObserver) */
+.timeline-entry.focused-entry {
+    opacity: 1;
+    filter: blur(0) grayscale(0);
+    transform: scale(1);
+}
+
+.timeline-entry.left {
+    align-self: flex-start;
+}
+
+.timeline-entry.right {
+    align-self: flex-end;
+}
+
+/* Entry Decoration */
+.entry-tech-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    color: rgba(255, 255, 255, 0.2);
+    margin-bottom: 1.5rem;
+    transition: color 0.6s ease;
+}
+
+.focused-entry .entry-tech-label {
+    color: #00f0ff;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.timeline-entry .year {
+    position: absolute;
+    top: -2rem;
+    font-family: var(--font-mono);
+    font-weight: 950;
+    font-size: 7rem;
+    color: rgba(255, 255, 255, 0.15);
+    /* Pushed opacity for superior legibility */
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    letter-spacing: -5px;
+}
+
+.focused-entry .year {
+    color: rgba(255, 255, 255, 0.4);
+    /* Very clear focus state */
+    transform: translateY(-20px) scale(1.05);
+}
+
+.left .year {
+    right: -30%;
+}
+
+.right .year {
+    left: -30%;
+}
+
+/* --- Entry Card (Holographic Design) --- */
+.entry-card {
+    background: rgba(15, 15, 15, 0.4);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 3.5rem;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.focused-entry .entry-card {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(20, 20, 20, 0.6);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(255, 255, 255, 0.02);
+}
+
+.card-top-info {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    margin-bottom: 2rem;
+    opacity: 0.3;
+    letter-spacing: 2px;
+}
+
+.focused-entry .card-top-info {
+    opacity: 0.7;
+}
+
+.entry-card h3 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1.2rem;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.entry-card p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.4;
+    transition: opacity 0.6s ease;
+}
+
+.focused-entry .entry-card p {
+    opacity: 0.7;
+}
+
+.card-bottom-line {
+    width: 40px;
+    height: 1px;
+    background: #00f0ff;
+    margin-top: 2.5rem;
+    transition: width 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.focused-entry .card-bottom-line {
+    width: 100%;
+}
+
+/* --- CV Redesign: DIGITAL DOSSIER --- */
+.about-footer {
+    margin-top: 10rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.dossier-card {
+    width: 100%;
+    max-width: 1000px;
+    background: linear-gradient(135deg, rgba(15, 15, 15, 0.6), rgba(5, 5, 5, 0.8));
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    /* Subtle cyan border */
+    border-radius: 40px;
+    padding: 4rem;
+    position: relative;
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+}
+
+.dossier-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0, 240, 255, 0.5), transparent);
+}
+
+.dossier-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.security-marker {
+    color: #00f0ff;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    font-weight: 700;
+}
+
+.dossier-main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 5rem;
+    align-items: center;
+}
+
+.dossier-info h3 {
+    font-size: 3.5rem;
+    font-weight: 950;
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+    background: linear-gradient(to bottom, #fff, #888);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+}
+
+.dossier-info p {
+    font-size: 1.1rem;
+    opacity: 0.5;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    max-width: 500px;
+}
+
+.file-metadata {
+    display: flex;
+    gap: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 1.2rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.meta-item span {
+    color: rgba(255, 255, 255, 0.3);
+    margin-right: 10px;
+}
+
+.meta-item strong {
+    color: #fff;
+}
+
+.dossier-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.holo-download-btn {
+    position: relative;
+    width: 100%;
+    height: 85px;
+    background: #fff;
+    color: #000 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-weight: 900;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    letter-spacing: 2px;
+}
+
+.holo-download-btn:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 0 30px 70px rgba(0, 240, 255, 0.5), 0 0 100px rgba(0, 240, 255, 0.2);
+    background: #00f0ff;
+    letter-spacing: 4px;
+}
+
+.holo-download-btn:active {
+    transform: translateY(-5px) scale(0.98);
+}
+
+.btn-scanline {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: scan-move 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+@keyframes scan-move {
+    0% {
+        top: -100%;
+    }
+
+    40% {
+        top: 100%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+.hire-cta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: #00f0ff;
+    letter-spacing: 6px;
+    text-align: center;
+    opacity: 0.8;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    font-weight: 700;
+}
+
+.dossier-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sys-status {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+}
+
+.status-label {
+    color: rgba(255, 255, 255, 0.2);
+    margin-right: 15px;
+}
+
+.status-value {
+    color: #00f0ff;
+    font-weight: 700;
+}
+
+@media (max-width: 992px) {
+    .dossier-main {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .dossier-action {
+        width: 100%;
+    }
+
+    .dossier-info h3 {
+        font-size: 2.5rem;
+    }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1200px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .timeline-entry {
+        width: 45%;
+    }
+
+    .timeline-entry .year {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .timeline-main-line {
+        left: 20px;
+        transform: none;
+    }
+
+    .timeline-scrolling-dot {
+        left: 20px;
+        transform: translate(-50%, -50%);
+    }
+
+    .timeline-entries {
+        gap: 6rem;
+    }
+
+    .timeline-entry {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+        align-self: flex-start !important;
+        opacity: 1;
+        filter: none;
+        transform: none;
+    }
+
+    .entry-card {
+        padding: 1.5rem;
+        /* Ajustado de 2rem */
+    }
+
+    .timeline-entry .year {
+        font-size: 2.5rem;
+        /* Ajustado de 3rem */
+        top: -2.2rem;
+        left: 0 !important;
+    }
+
+    /* CV Dossier Mobile Adjustments */
+    .dossier-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+
+    .dossier-info h3 {
+        font-size: 1.8rem;
+    }
+
+    .holo-download-btn {
+        font-size: 0.85rem;
+        height: 65px;
+        letter-spacing: 1px;
+    }
+}
+@media (max-width: 480px) {
+    .bento-card {
+        padding: 1.2rem;
+    }
+    
+    .role-title {
+        font-size: 2.1rem;
+    }
+    
+    .bio-text {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .profile-grid {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .specs-column {
+        padding-left: 0;
+        border-left: none;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+}
