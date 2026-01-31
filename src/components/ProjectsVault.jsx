@@ -112,7 +112,7 @@ export default function ProjectsVault() {
 
                 <div className="projects-vault" ref={vaultRef}>
                     {/* PROYECTO 1: Fortnite Monitor */}
-                    <a href={`${prefix}FortniteLatencyMonitor/index.html`} className="vault-item" draggable="false">
+                    <a href="/FortniteLatencyMonitor/index.html" className="vault-item" draggable="false">
                         <div className="card-strip">
                             <span>UID: PING-MON-001</span>
                         </div>
@@ -134,7 +134,7 @@ export default function ProjectsVault() {
                     </a>
 
                     {/* PROYECTO 2: Key Visualizer */}
-                    <a href={`${prefix}KeyResponseVisualizer/index.html`} className="vault-item" draggable="false">
+                    <a href="/KeyResponseVisualizer/index.html" className="vault-item" draggable="false">
                         <div className="card-strip">
                             <span>UID: INPUT-VIS-002</span>
                         </div>
@@ -156,7 +156,7 @@ export default function ProjectsVault() {
                     </a>
 
                     {/* PROYECTO 3: Nexus Hardware */}
-                    <a href={`${prefix}NexusHardware/frontend/dist/index.html`} className="vault-item" draggable="false">
+                    <a href="/NexusHardware/frontend/dist/index.html" className="vault-item" draggable="false">
                         <div className="card-strip">
                             <span>UID: NEXUS-STORE-003</span>
                         </div>
@@ -201,7 +201,7 @@ export default function ProjectsVault() {
                     </a>
 
                     {/* PROYECTO 5: NovaManager */}
-                    <a href={`${prefix}NovaManager/frontend/landing.html`} className="vault-item" target="_blank" rel="noopener noreferrer" draggable="false">
+                    <a href="/NovaManager/frontend/landing.html" className="vault-item" target="_blank" rel="noopener noreferrer" draggable="false">
                         <div className="card-strip">
                             <span>UID: NOVAMANAGER-V1</span>
                         </div>
