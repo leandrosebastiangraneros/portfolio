@@ -201,7 +201,7 @@ export default function ProjectsVault() {
                     </a>
 
                     {/* PROYECTO 5: NovaManager */}
-                    <a href="nova/index.html" className="vault-item" target="_blank" rel="noopener noreferrer" draggable="false">
+                    <a href="https://portfolio-hazel-five-14.vercel.app/" className="vault-item" target="_blank" rel="noopener noreferrer" draggable="false">
                         <div className="card-strip">
                             <span>UID: NOVAMANAGER-V1</span>
                         </div>
