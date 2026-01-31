@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export default function Globe3D() {
     const containerRef = useRef(null);
+    const isVisible = useRef(true);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -14,6 +15,15 @@ export default function Globe3D() {
 
         // Detect Mobile for performance profiling
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Intersection Observer logic to pause rendering when not in view
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisible.current = entry.isIntersecting;
+            },
+            { threshold: 0.1 }
+        );
+        observer.observe(container);
 
         // Scene
         const scene = new THREE.Scene();
@@ -121,7 +131,7 @@ export default function Globe3D() {
         globeGroup.add(coreSphere);
 
         // 3. Points Cloud (Reduced for mobile performance)
-        const particleCount = isMobile ? 800 : 2000;
+        const particleCount = isMobile ? 500 : 2000;
         const positions = new Float32Array(particleCount * 3);
         const r = 5.05;
         for (let i = 0; i < particleCount; i++) {
@@ -135,7 +145,7 @@ export default function Globe3D() {
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         const pointsMaterial = new THREE.PointsMaterial({
             color: 0x00f0ff,
-            size: 0.04,
+            size: isMobile ? 0.05 : 0.04,
             transparent: true,
             opacity: 0.3
         });
@@ -217,8 +227,11 @@ export default function Globe3D() {
         window.addEventListener('resize', handleResize);
 
         // Animation Loop
+        let frameId;
         const animate = () => {
-            requestAnimationFrame(animate);
+            frameId = requestAnimationFrame(animate);
+
+            if (!isVisible.current) return;
 
             satellites.forEach(sat => {
                 sat.angle += sat.speed;
@@ -239,6 +252,8 @@ export default function Globe3D() {
 
         return () => {
             window.removeEventListener('resize', handleResize);
+            cancelAnimationFrame(frameId);
+            observer.disconnect();
             if (container && renderer.domElement) {
                 container.removeChild(renderer.domElement);
             }
