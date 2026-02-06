@@ -1,0 +1,32 @@
+{
+  "name": "portfolio-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:nova && npm run build:nexus && vite build",
+    "build:nova": "cd public/NovaManager/frontend && npm install && npm run build && cd ../../../ && shx mkdir -p public/nova && shx cp -r public/NovaManager/frontend/dist/* public/nova/",
+    "build:nexus": "cd public/NexusHardware/frontend && npm install && npm run build && cd ../../../ && shx mkdir -p public/nexus && shx cp -r public/NexusHardware/frontend/dist/* public/nexus/",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.0",
+    "three": "^0.182.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "shx": "^0.4.0",
+    "vite": "^7.2.4"
+  }
+}

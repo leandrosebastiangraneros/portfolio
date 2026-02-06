@@ -1,0 +1,278 @@
+/* --- Nexus Interface: Skills Dashboard v2.0 --- */
+
+.skills-dashboard {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.skill-module {
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 240, 255, 0.1);
+    border-radius: 20px;
+    padding: 0;
+    /* Eliminado para que las capas internas lleguen al borde */
+    position: relative;
+    overflow: visible;
+    /* Permite ver hologramas fuera */
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.module-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    /* Esto contiene el haz de luz */
+    border-radius: 20px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.module-content {
+    padding: 2rem;
+    /* Restauramos el padding original del texto aquí */
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+    /* Por encima del haz de luz */
+}
+
+/* Bento Sizing */
+.skill-module.wide {
+    grid-column: span 8;
+}
+
+.skill-module.narrow {
+    grid-column: span 4;
+}
+
+.skill-module.medium {
+    grid-column: span 6;
+}
+
+.skill-module:hover {
+    z-index: 50;
+    /* Superpone la tarjeta activa y su holograma sobre las demás */
+    border-color: rgba(0, 240, 255, 0.4);
+    background: rgba(0, 240, 255, 0.03);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+}
+
+.skill-module:hover .hologram-projection {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-30px) scale(1.1);
+    /* Ajustado para mejor visibilidad */
+}
+
+/* Projection Container */
+.hologram-projection {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px) scale(0.8);
+    width: 150px;
+    height: 100px;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+    filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.6));
+}
+
+.projection-icon {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    animation: floating 3s ease-in-out infinite, hologramFlicker 4s infinite;
+    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4));
+}
+
+.projection-icon:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.projection-icon:nth-child(3) {
+    animation-delay: 1.2s;
+}
+
+/* Light Beam from bottom - Now filling the entire width and shorter */
+.module-inner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    /* Reducido de 100px a 60px para no tapar el texto */
+    background: linear-gradient(to top, rgba(0, 240, 255, 0.15) 0%, transparent 100%);
+    border-bottom: 2px solid rgba(0, 240, 255, 0.4);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: -1;
+    /* Enviado al fondo del contenedor para que el texto se vea encima */
+}
+
+.skill-module:hover .module-inner::after {
+    opacity: 1;
+}
+
+/* Animations */
+@keyframes floating {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+}
+
+@keyframes hologramFlicker {
+
+    0%,
+    19.999%,
+    22%,
+    62.999%,
+    64%,
+    64.999%,
+    70%,
+    100% {
+        opacity: 1;
+    }
+
+    20%,
+    21.999%,
+    63%,
+    63.999%,
+    65%,
+    69.999% {
+        opacity: 0.3;
+    }
+}
+
+/* HUD Decorations */
+.skill-module::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid #00f0ff;
+    border-left: 2px solid #00f0ff;
+    border-radius: 5px 0 0 0;
+    opacity: 0.3;
+}
+
+.module-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+}
+
+.module-id {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.module-status {
+    color: #00f0ff;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.skill-module h3 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.skill-module p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+}
+
+/* Segmented Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    margin: 1.5rem 0;
+    position: relative;
+    border-radius: 3px;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.progress-bar-segment {
+    height: 100%;
+    background: linear-gradient(90deg, #00f0ff 0%, #0088ff 100%);
+    width: 0;
+    transition: width 2s cubic-bezier(0.19, 1, 0.22, 1);
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+}
+
+/* Segment mask effect */
+.progress-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(90deg, transparent 0%, transparent 80%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.8) 100%);
+    background-size: 15px 100%;
+    pointer-events: none;
+}
+
+.in-view .progress-bar-segment {
+    width: var(--target-width);
+}
+
+@media (max-width: 1024px) {
+
+    .skill-module.wide,
+    .skill-module.narrow,
+    .skill-module.medium {
+        grid-column: span 6;
+    }
+}
+
+@media (max-width: 768px) {
+    .skills-dashboard {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .skill-module {
+        width: 100%;
+    }
+}

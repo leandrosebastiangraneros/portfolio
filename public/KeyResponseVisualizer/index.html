@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>Key Response Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2.0">
+</head>
+
+<body>
+    <div id="stars-canvas-container">
+        <canvas id="stars-canvas"></canvas>
+    </div>
+    <div class="atmosphere-overlay">
+        <div class="grain"></div>
+        <div class="scanlines"></div>
+    </div>
+
+    <!-- HEADER (New Modular Style) -->
+    <div class="project-header-container">
+        <header class="project-header">
+            <div class="header-top-row">
+                <a href="../index.html?skipBoot=true#projects" class="back-link">
+                    << VOLVER A PROYECTOS </a>
+                        <div class="status-badge">
+                            <span class="pulse-dot"></span>
+                            ACTIVE_LINK
+                        </div>
+            </div>
+
+            <div class="header-main-row">
+                <div class="header-meta">INPUT TELEMETRY // UID: K-VIS-001</div>
+                <h1 class="project-title">KEY_RESPONSE_VISUALIZER</h1>
+            </div>
+        </header>
+    </div>
+
+    <div class="main-layout">
+        <!-- LEFT: KEYBOARD PANEL -->
+        <div class="keyboard-container card-panel">
+            <div class="card-header-simple">
+                <span class="panel-label">VIRTUAL_KEYBOARD_INTERFACE</span>
+                <span class="panel-uid">DEV_ID: 0xFF</span>
+            </div>
+
+            <div class="keyboard-wrapper-outer">
+                <div class="tkl-keyboard" id="keyboard">
+                    <div class="keyboard-chassis">
+                        <!-- F-ROW -->
+                        <div class="key-row">
+                            <div class="key" data-code="Escape">
+                                <div class="key-inner">
+                                    <div class="front">Esc</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="spacer-sm"></div>
+                            <div class="key" data-code="F1">
+                                <div class="key-inner">
+                                    <div class="front">F1</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F2">
+                                <div class="key-inner">
+                                    <div class="front">F2</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F3">
+                                <div class="key-inner">
+                                    <div class="front">F3</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F4">
+                                <div class="key-inner">
+                                    <div class="front">F4</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="spacer-sm"></div>
+                            <div class="key" data-code="F5">
+                                <div class="key-inner">
+                                    <div class="front">F5</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F6">
+                                <div class="key-inner">
+                                    <div class="front">F6</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F7">
+                                <div class="key-inner">
+                                    <div class="front">F7</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F8">
+                                <div class="key-inner">
+                                    <div class="front">F8</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="spacer-sm"></div>
+                            <div class="key" data-code="F9">
+                                <div class="key-inner">
+                                    <div class="front">F9</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F10">
+                                <div class="key-inner">
+                                    <div class="front">F10</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F11">
+                                <div class="key-inner">
+                                    <div class="front">F11</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                            <div class="key" data-code="F12">
+                                <div class="key-inner">
+                                    <div class="front">F12</div>
+                                    <div class="top"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- MAIN BLOCK -->
+                        <div class="keyboard-main-block">
+                            <div class="qwerty-block">
+                                <!-- ROW 1 -->
+                                <div class="key-row">
+                                    <div class="key" data-code="Backquote">
+                                        <div class="key-inner">
+                                            <div class="front">`</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit1">
+                                        <div class="key-inner">
+                                            <div class="front">1</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit2">
+                                        <div class="key-inner">
+                                            <div class="front">2</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit3">
+                                        <div class="key-inner">
+                                            <div class="front">3</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit4">
+                                        <div class="key-inner">
+                                            <div class="front">4</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit5">
+                                        <div class="key-inner">
+                                            <div class="front">5</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit6">
+                                        <div class="key-inner">
+                                            <div class="front">6</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit7">
+                                        <div class="key-inner">
+                                            <div class="front">7</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit8">
+                                        <div class="key-inner">
+                                            <div class="front">8</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit9">
+                                        <div class="key-inner">
+                                            <div class="front">9</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Digit0">
+                                        <div class="key-inner">
+                                            <div class="front">0</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Minus">
+                                        <div class="key-inner">
+                                            <div class="front">-</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Equal">
+                                        <div class="key-inner">
+                                            <div class="front">=</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-backspace" data-code="Backspace">
+                                        <div class="key-inner">
+                                            <div class="front">Back</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ROW 2 -->
+                                <div class="key-row">
+                                    <div class="key key-tab" data-code="Tab">
+                                        <div class="key-inner">
+                                            <div class="front">Tab</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyQ">
+                                        <div class="key-inner">
+                                            <div class="front">Q</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyW">
+                                        <div class="key-inner">
+                                            <div class="front">W</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyE">
+                                        <div class="key-inner">
+                                            <div class="front">E</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyR">
+                                        <div class="key-inner">
+                                            <div class="front">R</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyT">
+                                        <div class="key-inner">
+                                            <div class="front">T</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyY">
+                                        <div class="key-inner">
+                                            <div class="front">Y</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyU">
+                                        <div class="key-inner">
+                                            <div class="front">U</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyI">
+                                        <div class="key-inner">
+                                            <div class="front">I</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyO">
+                                        <div class="key-inner">
+                                            <div class="front">O</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyP">
+                                        <div class="key-inner">
+                                            <div class="front">P</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="BracketLeft">
+                                        <div class="key-inner">
+                                            <div class="front">[</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="BracketRight">
+                                        <div class="key-inner">
+                                            <div class="front">]</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-backslash" data-code="Backslash">
+                                        <div class="key-inner">
+                                            <div class="front">\</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ROW 3 -->
+                                <div class="key-row">
+                                    <div class="key key-caps" data-code="CapsLock">
+                                        <div class="key-inner">
+                                            <div class="front">Caps</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyA">
+                                        <div class="key-inner">
+                                            <div class="front">A</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyS">
+                                        <div class="key-inner">
+                                            <div class="front">S</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyD">
+                                        <div class="key-inner">
+                                            <div class="front">D</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyF">
+                                        <div class="key-inner">
+                                            <div class="front">F</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyG">
+                                        <div class="key-inner">
+                                            <div class="front">G</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyH">
+                                        <div class="key-inner">
+                                            <div class="front">H</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyJ">
+                                        <div class="key-inner">
+                                            <div class="front">J</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyK">
+                                        <div class="key-inner">
+                                            <div class="front">K</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyL">
+                                        <div class="key-inner">
+                                            <div class="front">L</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Semicolon">
+                                        <div class="key-inner">
+                                            <div class="front">;</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Quote">
+                                        <div class="key-inner">
+                                            <div class="front">'</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-enter" data-code="Enter">
+                                        <div class="key-inner">
+                                            <div class="front">Enter</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ROW 4 -->
+                                <div class="key-row">
+                                    <div class="key key-shift-l" data-code="ShiftLeft">
+                                        <div class="key-inner">
+                                            <div class="front">Shift</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyZ">
+                                        <div class="key-inner">
+                                            <div class="front">Z</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyX">
+                                        <div class="key-inner">
+                                            <div class="front">X</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyC">
+                                        <div class="key-inner">
+                                            <div class="front">C</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyV">
+                                        <div class="key-inner">
+                                            <div class="front">V</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyB">
+                                        <div class="key-inner">
+                                            <div class="front">B</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyN">
+                                        <div class="key-inner">
+                                            <div class="front">N</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="KeyM">
+                                        <div class="key-inner">
+                                            <div class="front">M</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Comma">
+                                        <div class="key-inner">
+                                            <div class="front">,</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Period">
+                                        <div class="key-inner">
+                                            <div class="front">.</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Slash">
+                                        <div class="key-inner">
+                                            <div class="front">/</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-shift-r" data-code="ShiftRight">
+                                        <div class="key-inner">
+                                            <div class="front">Shift</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ROW 5 -->
+                                <div class="key-row">
+                                    <div class="key key-ctrl" data-code="ControlLeft">
+                                        <div class="key-inner">
+                                            <div class="front">Ctrl</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-win" data-code="MetaLeft">
+                                        <div class="key-inner">
+                                            <div class="front">Win</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-alt" data-code="AltLeft">
+                                        <div class="key-inner">
+                                            <div class="front">Alt</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-space" data-code="Space">
+                                        <div class="key-inner">
+                                            <div class="front">Space</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-alt" data-code="AltRight">
+                                        <div class="key-inner">
+                                            <div class="front">Alt</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-win" data-code="MetaRight">
+                                        <div class="key-inner">
+                                            <div class="front">Win</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-menu" data-code="ContextMenu">
+                                        <div class="key-inner">
+                                            <div class="front">Menu</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key key-ctrl" data-code="ControlRight">
+                                        <div class="key-inner">
+                                            <div class="front">Ctrl</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-block">
+                                <div class="key-row">
+                                    <div class="key" data-code="PrintScreen">
+                                        <div class="key-inner">
+                                            <div class="front">Prt</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="ScrollLock">
+                                        <div class="key-inner">
+                                            <div class="front">Scr</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Pause">
+                                        <div class="key-inner">
+                                            <div class="front">Pau</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="spacer-row"></div>
+                                <div class="key-row">
+                                    <div class="key" data-code="Insert">
+                                        <div class="key-inner">
+                                            <div class="front">Ins</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="Home">
+                                        <div class="key-inner">
+                                            <div class="front">Hom</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="PageUp">
+                                        <div class="key-inner">
+                                            <div class="front">PgU</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="key-row">
+                                    <div class="key" data-code="Delete">
+                                        <div class="key-inner">
+                                            <div class="front">Del</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="End">
+                                        <div class="key-inner">
+                                            <div class="front">End</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                    <div class="key" data-code="PageDown">
+                                        <div class="key-inner">
+                                            <div class="front">PgD</div>
+                                            <div class="top"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="spacer-row"></div>
+                                <div class="arrow-cluster">
+                                    <div class="key-row center-content">
+                                        <div class="key" data-code="ArrowUp">
+                                            <div class="key-inner">
+                                                <div class="front">↑</div>
+                                                <div class="top"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="key-row">
+                                        <div class="key" data-code="ArrowLeft">
+                                            <div class="key-inner">
+                                                <div class="front">←</div>
+                                                <div class="top"></div>
+                                            </div>
+                                        </div>
+                                        <div class="key" data-code="ArrowDown">
+                                            <div class="key-inner">
+                                                <div class="front">↓</div>
+                                                <div class="top"></div>
+                                            </div>
+                                        </div>
+                                        <div class="key" data-code="ArrowRight">
+                                            <div class="key-inner">
+                                                <div class="front">→</div>
+                                                <div class="top"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: DATA & INFO PANEL -->
+        <div class="data-container">
+            <!-- DISPLAY CARD -->
+            <div class="key-info-card card-panel" id="key-card">
+                <div class="card-header-simple">
+                    <span class="panel-label">DATA_INPUT_NODE</span>
+                    <span class="status-indicator" id="status-text">WAITING_INPUT...</span>
+                </div>
+
+                <div class="display-core">
+                    <div class="key-display-large" id="key-display">?</div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span class="metric-label">HARDWARE_CODE</span>
+                        <span class="metric-value-dynamic" id="code-display">--</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">WHICH_ID</span>
+                        <span class="metric-value-dynamic" id="which-display">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOCS CARD -->
+            <div class="docs-card card-panel">
+                <h2 class="info-title">DOCUMENTACIÓN TÉCNICA</h2>
+
+                <div class="info-block">
+                    <h3>// LÓGICA DEL SISTEMA</h3>
+                    <p>
+                        Este visualizador intercepta eventos nativos del navegador (<code>KeyboardEvent</code>) para
+                        analizar la respuesta de entrada en tiempo real.
+                        La arquitectura mapea códigos de hardware físicos (<code>e.code</code>) a nodos del DOM,
+                        permitiendo visualizar la latencia de entrada y detectar "ghosting" independientemente de la
+                        configuración de idioma del sistema operativo.
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>// ENGINE_TELEMETRY (JS)</h3>
+                    <div class="code-window">
+                        <div class="window-header">engine.js</div>
+                        <pre><code>window.addEventListener('keydown', (e) => {
+    const { code, key, which } = e;
+    // Mapeo directo de Hardware -> Visual
+    updateVisualNode(code); 
+});</code></pre>
+                    </div>
+                </div>
+                <div class="tech-tags">
+                    <span class="tech-tag">EVENT_LISTENER</span>
+                    <span class="tech-tag">DOM_MANIPULATION</span>
+                    <span class="tech-tag">REAL_TIME_IO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="project-footer">
+        <div>SYSTEM: NEXUS_OS_v2.0</div>
+        <div>ESTADO: MONITOREANDO</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

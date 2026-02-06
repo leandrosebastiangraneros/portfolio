@@ -1,0 +1,337 @@
+/* --- Advanced 3D Cylindrical Projects Carousel --- */
+#projects {
+    padding: 12vh 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 20;
+}
+
+#projects .container {
+    padding-left: 5%;
+    margin-bottom: 2rem;
+    pointer-events: none;
+}
+
+.projects-vault {
+    display: flex;
+    overflow-x: auto;
+    gap: 4rem;
+    /* --- Perfect Centering Spacers --- */
+    /* Half of viewport minus half of card width (650px / 2 = 325px) */
+    padding: 6rem calc(50vw - 325px) 10rem calc(50vw - 325px);
+
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    perspective: 2500px;
+    pointer-events: all;
+    cursor: grab;
+    user-select: none;
+    transform-style: preserve-3d;
+}
+
+.projects-vault::-webkit-scrollbar {
+    display: none;
+}
+
+.projects-vault:active {
+    cursor: grabbing;
+}
+
+.vault-item {
+    flex: 0 0 650px;
+    scroll-snap-align: center;
+    display: flex;
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    min-height: 400px;
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    overflow: visible;
+    transition: transform 0.1s ease-out, border-color 0.4s ease, background 0.4s ease;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.vault-item:hover {
+    border-color: rgba(0, 240, 255, 0.3);
+    background: rgba(15, 15, 15, 0.7);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.1);
+}
+
+/* Glass Shine Animation */
+.vault-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            transparent);
+    transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.vault-item:hover::before {
+    left: 150%;
+}
+
+/* --- UID Side Strip --- */
+.card-strip {
+    width: 60px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    transform: translateZ(20px);
+}
+
+.card-strip span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    opacity: 0.3;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.vault-item:hover .card-strip span {
+    opacity: 0.8;
+}
+
+/* --- Card Body --- */
+.card-body {
+    padding: 3.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transform: translateZ(40px);
+}
+
+.vault-item h3 {
+    font-family: var(--font-primary);
+    font-weight: 950;
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+    letter-spacing: -1px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.vault-item p {
+    font-size: 1rem;
+    line-height: 1.7;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+    max-width: 95%;
+}
+
+/* --- Metadata & Tech --- */
+.item-meta {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.tech-stack {
+    display: flex;
+    gap: 1.8rem;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tech-stack i {
+    transition: all 0.4s ease;
+}
+
+.vault-item:hover .tech-stack i {
+    transform: translateY(-8px) scale(1.1);
+    color: #fff;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1200px) {
+    .vault-item {
+        flex: 0 0 550px;
+        min-height: 380px;
+    }
+
+    .projects-vault {
+        padding: 6rem calc(50vw - 275px) 10rem calc(50vw - 275px);
+    }
+}
+
+@media (max-width: 768px) {
+    #projects {
+        padding: 6vh 0;
+    }
+
+    .projects-vault {
+        gap: 1.5rem;
+        /* Increased top padding from 6rem to 10rem to accommodate holograms */
+        padding: 10rem 1.5rem 6rem 1.5rem;
+        cursor: default;
+        perspective: none;
+        transform-style: flat;
+    }
+
+    .vault-item {
+        flex: 0 0 90vw;
+        /* Ligeramente más ancho para aprovechar espacio pero con margen real */
+        min-height: auto;
+        flex-direction: column;
+        transform: none !important;
+        margin: 0 auto;
+    }
+
+    .card-strip {
+        width: 100%;
+        height: 40px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        transform: none;
+    }
+
+    .card-strip span {
+        writing-mode: horizontal-tb;
+        transform: none;
+    }
+
+    .card-body {
+        padding: 2rem;
+        transform: none;
+    }
+
+    .vault-item h3 {
+        font-size: 1.6rem;
+    }
+
+    .item-meta {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+}
+
+/* --- HOLOGRAPHIC INTEGRATION OVERRIDES --- */
+.vault-item.skill-module {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    overflow: visible;
+    /* Allow hologram projection to stick out */
+    transition: transform 0.3s ease;
+    /* Smooth transition for hover lift */
+}
+
+/* Remove the old glass shine effect which causes "floating lines" */
+.vault-item.skill-module::before {
+    display: none !important;
+    content: none !important;
+}
+
+.vault-item.skill-module:hover {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    /* Removed translate transform to avoid conflict with JS 3D logic. 
+       We rely on internal element movement for the pop-out effect. */
+    transform: none !important;
+}
+
+/* Ensure skill-module styles take precedence and fill the 3D card */
+.vault-item.skill-module .module-inner {
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+}
+
+.vault-item.skill-module:hover .module-inner {
+    border-color: #00f0ff;
+    background: rgba(0, 20, 40, 0.9);
+    /* Slightly more opaque on hover */
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.25), inset 0 0 20px rgba(0, 240, 255, 0.1);
+    transform: translateZ(40px) scale(1.05);
+    /* Proper pop-out handled here */
+}
+
+/* Adjust holographic projection position for the carousel context */
+.vault-item.skill-module .hologram-projection {
+    top: -40px;
+    /* Lowered slightly to prevent clipping */
+    transform: translateX(-50%) translateZ(10px) scale(0.9);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 20;
+    pointer-events: none;
+    /* Prevent interference */
+    white-space: nowrap;
+    /* Prevent icon wrapping */
+}
+
+.vault-item.skill-module:hover .hologram-projection {
+    top: -70px;
+    transform: translateX(-50%) translateZ(80px) scale(1.2);
+    filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.9));
+}
+
+.vault-item.skill-module h3,
+.vault-item.skill-module .module-meta,
+.vault-item.skill-module .tech-stack {
+    transform: translateZ(20px);
+    transition: transform 0.3s ease;
+}
+
+.vault-item.skill-module:hover h3,
+.vault-item.skill-module:hover .module-meta,
+.vault-item.skill-module:hover .tech-stack {
+    transform: translateZ(60px);
+}
+/* --- Cleaned Up Inline Styles --- */
+.vault-item-link {
+    padding: 0 !important;
+}
+.project-title {
+    font-size: 1.8rem !important;
+    margin-bottom: 1rem !important;
+    color: #fff !important;
+}
+.project-desc {
+    flex: 1;
+    font-size: 1rem !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+.project-progress-container {
+    margin: 0.5rem 0 1.5rem !important;
+}
+.project-stack {
+    margin-top: auto !important;
+    font-size: 1.2rem !important;
+}
+.project-icon-large {
+    font-size: 30px !important;
+}
+

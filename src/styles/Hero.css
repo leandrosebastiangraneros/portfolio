@@ -1,0 +1,106 @@
+/* Hero Section Styles */
+
+.hero-section {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    z-index: var(--z-base);
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    width: 100%;
+    max-width: 800px;
+    z-index: var(--z-content);
+    pointer-events: none;
+    opacity: 0;
+    filter: blur(10px);
+    transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#globe-container {
+    position: absolute;
+    top: -5vh;
+    /* Subido ligeramente para que se vea mas completo */
+    right: -5vw;
+    /* Desplazado un poco a la derecha para equilibrar con el texto */
+    width: 75vw;
+    height: 110vh;
+    /* Un poco mas alto para evitar que se corte al subirlo */
+    z-index: 20;
+    /* Asegurar que este por encima pero sea interactivo */
+    pointer-events: auto;
+    background: transparent !important;
+    transition: opacity 1.5s ease;
+    will-change: transform, opacity;
+}
+
+body.boot-complete .hero-content.show-element {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-50%);
+}
+
+.hero-content .subtitle {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.hero-content .title {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 0.9;
+    margin-bottom: 1rem;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content .role {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+@media (max-width: 1024px) {
+    .hero-content {
+        left: 5%;
+    }
+
+    #globe-container {
+        width: 100vw;
+        right: 0;
+        opacity: 0.3;
+        /* Fade it out slightly to not clash with text */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        left: 5%;
+        width: 90%;
+        align-items: center;
+        text-align: center;
+        max-width: none;
+    }
+
+    .hero-content .title {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+    }
+
+    .hero-content .subtitle {
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 375px) {
+    .hero-content .title {
+        font-size: 2.2rem;
+    }
+}

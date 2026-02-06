@@ -1,0 +1,710 @@
+:root {
+    --bg-color: #050505;
+    --primary-neon: #00f0ff;
+    --secondary-neon: #a020f0;
+    --success-color: #00ff9d;
+    --warning-color: #ffaa00;
+    --danger-color: #ff003c;
+    --text-color: #fff;
+    --font-heading: 'Space Mono', monospace;
+    --font-gamer: 'Orbitron', sans-serif;
+    --glass-bg: rgba(10, 10, 15, 0.7);
+    --glass-border: rgba(0, 240, 255, 0.15);
+    --accent-color: #00f0ff;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* --- BACKGROUND FX --- */
+#stars-canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.atmosphere-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+}
+
+.scanlines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+    background-size: 100% 4px;
+    z-index: 9001;
+    pointer-events: none;
+}
+
+/* --- HEADER --- */
+.project-header-container {
+    width: 100%;
+    max-width: 1400px;
+    padding: 2rem 2rem 0 2rem;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.project-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-link {
+    font-family: var(--font-heading);
+    color: var(--primary-neon);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--primary-neon);
+    transform: translateX(-5px);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.7rem;
+    font-family: var(--font-heading);
+    color: var(--success-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--success-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--success-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+}
+
+.header-meta {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 2px;
+}
+
+.project-title {
+    font-family: var(--font-gamer);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* --- MAIN LAYOUT --- */
+.main-layout {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    /* Keyboard takes more space */
+    gap: 2rem;
+    width: 100%;
+    max-width: 1400px;
+    padding: 2rem;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+/* --- CARD PANELS --- */
+.card-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+    animation: scanlineTop 4s infinite linear;
+    z-index: 10;
+}
+
+@keyframes scanlineTop {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.card-header-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.panel-label {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: var(--primary-neon);
+    letter-spacing: 1px;
+}
+
+.panel-uid {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- KEYBOARD SPECIFIC --- */
+.keyboard-container {
+    overflow: hidden;
+    /* Contain the 3D overflow */
+    min-height: 400px;
+    /* Ensure height */
+    justify-content: center;
+}
+
+.keyboard-wrapper-outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    perspective: 1000px;
+    padding: 2rem 0;
+}
+
+.tkl-keyboard {
+    transform-style: preserve-3d;
+    transform: rotateX(20deg) translateY(-20px);
+    /* Slightly less extreme rotation */
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* No fixed width here, rely on children */
+}
+
+.keyboard-chassis {
+    background: linear-gradient(145deg, #111, #080808);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 240, 255, 0.1);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.keyboard-main-block {
+    display: flex;
+    gap: 20px;
+}
+
+.qwerty-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 135px;
+    /* Fixed width for nav block */
+}
+
+.key-row {
+    display: flex;
+    gap: 5px;
+}
+
+.spacer-sm {
+    width: 35px;
+}
+
+.spacer-row {
+    height: 12px;
+}
+
+/* 3D Key Styling */
+.key {
+    position: relative;
+    height: 40px;
+    /* Slightly smaller for better fit */
+    width: 40px;
+    /* Base width */
+    flex: 1;
+    /* Grow to fill row */
+    transform-style: preserve-3d;
+    transition: transform 0.05s ease;
+}
+
+/* Fixed widths override flex */
+.nav-block .key,
+.arrow-cluster .key {
+    flex: none;
+    width: 40px;
+}
+
+.arrow-cluster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.arrow-cluster .key-row {
+    justify-content: center;
+}
+
+.key-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+}
+
+.key-inner .front {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-gamer);
+    font-size: 0.55rem;
+    pointer-events: none;
+    backface-visibility: hidden;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #1a1a1a, #111);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    transform: translateZ(8px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.key-inner .top {
+    position: absolute;
+    bottom: 0;
+    /* Adjust top face for 3D feeling */
+    height: 8px;
+    width: 100%;
+    background: #080808;
+    transform: rotateX(-90deg);
+    transform-origin: bottom;
+}
+
+/* Side faces */
+.key-inner::before,
+.key-inner::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    /* Thickness matches translateZ */
+    height: 100%;
+    background: #050505;
+}
+
+.key-inner::before {
+    left: 0;
+    transform: rotateY(-90deg);
+    transform-origin: left;
+}
+
+.key-inner::after {
+    right: 0;
+    transform: rotateY(90deg);
+    transform-origin: right;
+}
+
+/* Active State */
+.key.active {
+    transform: translateZ(-6px);
+    /* Press down effect */
+}
+
+.key.active .front {
+    background: var(--accent-color);
+    color: #000;
+    box-shadow: 0 0 25px var(--accent-color);
+    font-weight: 900;
+    border-color: #fff;
+}
+
+/* Key Sizings */
+.key-backspace {
+    flex: 2;
+}
+
+.key-tab {
+    flex: 1.5;
+}
+
+.key-backslash {
+    flex: 1.5;
+}
+
+.key-caps {
+    flex: 1.75;
+}
+
+.key-enter {
+    flex: 2.25;
+}
+
+.key-shift-l {
+    flex: 2.25;
+}
+
+.key-shift-r {
+    flex: 2.75;
+}
+
+.key-ctrl,
+.key-win,
+.key-alt,
+.key-menu {
+    flex: 1.25;
+}
+
+.key-space {
+    flex: 6.5;
+}
+
+
+/* --- DATA PANEL --- */
+.data-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.key-info-card {
+    flex: 1;
+    min-height: 250px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Active Flash for Card */
+.key-info-card.active {
+    border-color: var(--success-color);
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.15);
+}
+
+.status-indicator {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    color: #666;
+    padding: 2px 6px;
+    border: 1px solid #333;
+    border-radius: 2px;
+}
+
+.display-core {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.key-display-large {
+    font-size: 5rem;
+    font-family: var(--font-gamer);
+    color: var(--primary-neon);
+    text-shadow: 0 0 40px var(--primary-neon);
+    line-height: 1;
+}
+
+.metrics-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+}
+
+.metric-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.metric-label {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.metric-value-dynamic {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* --- DOCS CARD --- */
+.docs-card {
+    flex: 1;
+}
+
+.info-title {
+    font-family: var(--font-gamer);
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-neon);
+    display: inline-block;
+}
+
+.info-block {
+    margin-bottom: 1rem;
+}
+
+.info-block h3 {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: var(--primary-neon);
+    margin-bottom: 0.5rem;
+}
+
+.info-block p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+}
+
+.code-window {
+    background: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.window-header {
+    background: #1a1a1a;
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 0.6rem;
+    color: #888;
+    border-bottom: 1px solid #333;
+}
+
+pre {
+    margin: 0;
+    padding: 0.8rem;
+    overflow-x: auto;
+}
+
+code {
+    font-family: 'Consolas', monospace;
+    font-size: 0.7rem;
+    color: #a9b7c6;
+}
+
+.tech-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 1rem;
+}
+
+.tech-tag {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--primary-neon);
+}
+
+/* --- FOOTER --- */
+.project-footer {
+    width: 100%;
+    max-width: 1400px;
+    padding: 1rem 2rem 2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.3);
+    box-sizing: border-box;
+}
+
+/* --- RESPONSIVE QUERIES --- */
+
+/* Scale down keyboard on smaller screens but keep columns if possible */
+@media (max-width: 1200px) {
+    .main-layout {
+        gap: 1rem;
+    }
+
+    .tkl-keyboard {
+        /* Scale down to fit */
+        transform: rotateX(20deg) translateY(-20px) scale(0.85);
+    }
+}
+
+/* Stack on Tablet/Mobile */
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        /* Stack */
+    }
+
+    .keyboard-container {
+        padding: 0;
+        overflow-x: auto;
+        /* Allow horizontal scroll if needed */
+        justify-content: flex-start;
+        /* Left align to allow scroll */
+    }
+
+    .keyboard-wrapper-outer {
+        /* Force minimum width to prevent crushing keyboard */
+        min-width: 800px;
+    }
+
+    .tkl-keyboard {
+        transform: rotateX(20deg) scale(0.9);
+        /* Reset scale somewhat since we scroll */
+    }
+
+    .data-container {
+        flex-direction: row;
+        /* Side-by-side data cards on tablet? */
+    }
+
+    .project-title {
+        font-size: 2rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .keyboard-wrapper-outer {
+        /* Even smaller scale for mobile visual if user wants to see it all, 
+           or keep scrolling. 'Perfect visual' suggests fitting. */
+        min-width: 0;
+        /* Try to fit */
+        transform: scale(0.6);
+        /* CSS Zoom hack */
+        margin-left: -20%;
+        /* Counteract zoom origin center if needed */
+    }
+
+    .tkl-keyboard {
+        /* Try to fit without scroll if possible, but TKL is wide. 
+           Let's just scale strictly. */
+        transform: rotateX(15deg) scale(0.65);
+        margin-left: -150px;
+        /* Hacky centering for scale */
+    }
+
+    .data-container {
+        flex-direction: column;
+    }
+
+    .project-header-container {
+        padding: 1rem 1rem 0 1rem;
+    }
+
+    .main-layout {
+        padding: 1rem;
+    }
+
+    .card-panel {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-title {
+        font-size: 1.5rem;
+    }
+
+    .keyboard-wrapper-outer {
+        transform: scale(0.45);
+        margin-left: -150px;
+    }
+
+    .tkl-keyboard {
+        margin-left: -50px;
+    }
+}

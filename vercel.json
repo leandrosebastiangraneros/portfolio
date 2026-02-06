@@ -1,0 +1,26 @@
+{
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+        {
+            "source": "/",
+            "destination": "/nova/index.html"
+        },
+        {
+            "source": "/nova/:path*",
+            "destination": "/nova/:path*"
+        },
+        {
+            "source": "/nexus/:path*",
+            "destination": "/nexus/:path*"
+        },
+        {
+            "source": "/cv.pdf",
+            "destination": "/cv.pdf"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/nova/index.html"
+        }
+    ]
+}
