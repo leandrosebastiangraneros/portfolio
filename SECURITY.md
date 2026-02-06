@@ -11,6 +11,6 @@ Solo la última versión de este proyecto cuenta actualmente con soporte de actu
 
 ## Reportar una Vulnerabilidad
 
-Si descubres una vulnerabilidad de seguridad dentro de este proyecto, por favor envía un correo electrónico a **leandro.graneros@example.com**. Todas las vulnerabilidades de seguridad serán atendidas prontamente.
+Si descubres una vulnerabilidad de seguridad dentro de este proyecto, por favor envía un correo electrónico a **leandro.graneros@alu.frlp.utn.edu.ar**. Todas las vulnerabilidades de seguridad serán atendidas prontamente.
 
 **Por favor, no reportes vulnerabilidades de seguridad a través de issues públicos de GitHub.**
