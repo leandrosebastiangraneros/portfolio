@@ -99,7 +99,7 @@ const InventoryModule = ({ optimizationData, onRefresh }) => {
                             <tr>
                                 <th className="p-4 font-normal">Component</th>
                                 <th className="p-4 font-normal">Details</th>
-                                <th className="p-4 font-normal text-right">Velocity (Avg)</th>
+                                <th className="p-4 font-normal text-right">Ventas Mensuales (Avg)</th>
                                 <th className="p-4 font-normal text-right">Restock Delta</th>
                                 <th className="p-4 font-normal text-center">Status</th>
                             </tr>
