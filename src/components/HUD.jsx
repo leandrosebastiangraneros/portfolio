@@ -3,13 +3,33 @@ import '../styles/HUD.css';
 
 export default function HUD({ visible }) {
     const [coords, setCoords] = useState("000 - 000");
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     useEffect(() => {
         const handleMouseMove = (e) => {
             setCoords(`${String(e.clientX).padStart(3, '0')} - ${String(e.clientY).padStart(3, '0')}`);
         };
+
+        let ticking = false;
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = (window.scrollY / totalHeight) * 100;
+                    setScrollProgress(progress);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
         window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     return (
@@ -45,12 +65,23 @@ export default function HUD({ visible }) {
 
             <nav className={`navbar ${visible ? 'content-visible' : ''}`}>
                 <div className="navbar-wrapper">
+                    {/* Scanline Border Effect */}
+                    <div className="nav-scanline"></div>
+
                     <a href="#hero" className="logo">LG.</a>
                     <div className="nav-links">
                         <a href="#about">Resumen</a>
                         <a href="#skills">Habilidades</a>
                         <a href="#projects">Proyectos</a>
                         <a href="#contact">Contacto</a>
+                    </div>
+
+                    {/* Scroll Progress Bar */}
+                    <div className="nav-scroll-progress-container">
+                        <div
+                            className="nav-scroll-progress-fill"
+                            style={{ width: `${scrollProgress}%` }}
+                        ></div>
                     </div>
                 </div>
             </nav>

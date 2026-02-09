@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 
-export default function ScrollReveal({ children, className = "", threshold = 0.1, once = false }) {
+export default function ScrollReveal({ children, className = "", threshold = 0.05, once = false }) {
     const [isVisible, setIsVisible] = useState(false);
     const [node, setNode] = useState(null);
 

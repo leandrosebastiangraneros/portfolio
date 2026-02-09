@@ -3,22 +3,22 @@
 .skills-dashboard {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: minmax(180px, auto);
-    gap: 1.5rem;
+    grid-auto-rows: minmax(140px, auto);
+    /* Reducido de 180px */
+    gap: clamp(1rem, 2vw, 1.5rem);
     margin-top: 3rem;
 }
 
 .skill-module {
-    background: rgba(10, 10, 10, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 240, 255, 0.1);
-    border-radius: 20px;
+    background: rgba(10, 10, 10, 0.3);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    /* Bordes rectos */
     padding: 0;
-    /* Eliminado para que las capas internas lleguen al borde */
     position: relative;
     overflow: visible;
-    /* Permite ver hologramas fuera */
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     z-index: 1;
     display: flex;
@@ -30,16 +30,15 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    /* Esto contiene el haz de luz */
-    border-radius: 20px;
+    border-radius: 0;
+    /* Bordes rectos */
     z-index: 2;
     display: flex;
     flex-direction: column;
 }
 
 .module-content {
-    padding: 2rem;
-    /* Restauramos el padding original del texto aquí */
+    padding: clamp(1.2rem, 3vw, 2rem);
     height: 100%;
     width: 100%;
     display: flex;
@@ -47,7 +46,6 @@
     justify-content: space-between;
     position: relative;
     z-index: 3;
-    /* Por encima del haz de luz */
 }
 
 /* Bento Sizing */
@@ -65,11 +63,10 @@
 
 .skill-module:hover {
     z-index: 50;
-    /* Superpone la tarjeta activa y su holograma sobre las demás */
-    border-color: rgba(0, 240, 255, 0.4);
-    background: rgba(0, 240, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(15, 15, 15, 0.4);
     transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(255, 255, 255, 0.02);
 }
 
 .skill-module:hover .hologram-projection {
@@ -94,7 +91,11 @@
     align-items: center;
     gap: 15px;
     z-index: 100;
-    filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.6));
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+    /* Fondo con textura de escaneo para máxima calidad */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255, 255, 255, 0.03) 2px, transparent 3px);
+    border-radius: 50%;
 }
 
 .projection-icon {
@@ -102,7 +103,9 @@
     height: 45px;
     object-fit: contain;
     animation: floating 3s ease-in-out infinite, hologramFlicker 4s infinite;
-    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4));
+    filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    color: #ffffff !important;
+    /* Para iconos de fuente */
 }
 
 .projection-icon:nth-child(2) {
@@ -122,8 +125,8 @@
     width: 100%;
     height: 60px;
     /* Reducido de 100px a 60px para no tapar el texto */
-    background: linear-gradient(to top, rgba(0, 240, 255, 0.15) 0%, transparent 100%);
-    border-bottom: 2px solid rgba(0, 240, 255, 0.4);
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+    border-bottom: 2px solid #ffffff;
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -179,8 +182,8 @@
     left: 0;
     width: 20px;
     height: 20px;
-    border-top: 2px solid #00f0ff;
-    border-left: 2px solid #00f0ff;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
     border-radius: 5px 0 0 0;
     opacity: 0.3;
 }
@@ -199,13 +202,13 @@
 }
 
 .module-status {
-    color: #00f0ff;
+    color: #ffffff;
     font-weight: 700;
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
 }
 
 .skill-module h3 {
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.5px;
@@ -214,7 +217,7 @@
 }
 
 .skill-module p {
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
     color: rgba(255, 255, 255, 0.5);
     line-height: 1.5;
 }
@@ -233,11 +236,11 @@
 
 .progress-bar-segment {
     height: 100%;
-    background: linear-gradient(90deg, #00f0ff 0%, #0088ff 100%);
+    background: linear-gradient(90deg, #ffffff 0%, #333333 100%);
     width: 0;
     transition: width 2s cubic-bezier(0.19, 1, 0.22, 1);
     position: relative;
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 /* Segment mask effect */
@@ -259,10 +262,54 @@
 
 @media (max-width: 1024px) {
 
+    /* --- Optimización de Holograma Premium para Móvil --- */
+    .projection-icon {
+        animation: floating 4s ease-in-out infinite, hologramFlicker 5s infinite !important;
+        /* Combinar brillo con transformación a blanco hídrico */
+        filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5)) !important;
+        will-change: transform, opacity;
+        color: #ffffff !important;
+    }
+
+    .hologram-projection {
+        filter: none !important;
+        /* Evitar filtros anidados pesados */
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%) !important;
+        /* Añadir líneas de escaneo ligeras */
+        background-image:
+            radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%),
+            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 3px, transparent 4px) !important;
+    }
+
+    /* Re-habilitar haz de luz de forma estática y suave */
+    .module-inner::after {
+        display: block !important;
+        height: 40px !important;
+        opacity: 0.4 !important;
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.15) 0%, transparent 100%) !important;
+        animation: none !important;
+        /* Sin animación pesada */
+    }
+
+
     .skill-module.wide,
     .skill-module.narrow,
     .skill-module.medium {
         grid-column: span 6;
+        max-width: 480px;
+        /* Limitar ancho en tablet */
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .skill-module.wide,
+    .skill-module.narrow,
+    .skill-module.medium {
+        max-width: 550px;
     }
 }
 

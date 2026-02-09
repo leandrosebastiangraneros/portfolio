@@ -9,7 +9,6 @@
     --secondary-text: #888888;
     --glass-bg: rgba(20, 20, 20, 0.6);
     --border-light: rgba(255, 255, 255, 0.1);
-    --indicator-green: #00ff00;
 
     /* --- TYPOGRAPHY --- */
     --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
@@ -248,26 +247,41 @@ ol {
     transition: width 0.2s, height 0.2s, background-color 0.2s;
     opacity: 0;
 }
+
 /* --- MOBILE PERFORMANCE OVERRIDES --- */
 @media (max-width: 1024px) {
-    * {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-    }
 
-    .bento-card, .entry-card, .glass-card, .vault-item, .skills-card, .holo-download-btn {
-        background: rgba(15, 15, 15, 0.95) !important;
+    .bento-card,
+    .entry-card,
+    .glass-card,
+    .vault-item,
+    .window-console,
+    .skills-card,
+    .holo-download-btn {
+        background: rgba(10, 10, 10, 0.75) !important;
+        /* Más opaco para compensar menos blur */
+        backdrop-filter: blur(8px) !important;
+        /* Blur reducido (era 15px) */
+        -webkit-backdrop-filter: blur(8px) !important;
         border-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    .scroll-reveal, .hidden-element {
+    /* Eliminado el fondo casi sólido para permitir Glassmorphism */
+
+    .boot-complete .scroll-reveal {
         filter: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
     }
 
-    .cursor-dot, .cursor-outline {
+    /* No forzamos visibilidad en .hidden-element para que HeroSection funcione bien durante el boot */
+
+    .cursor-dot,
+    .cursor-outline {
         display: none !important;
     }
-    
+
     * {
         cursor: auto !important;
     }

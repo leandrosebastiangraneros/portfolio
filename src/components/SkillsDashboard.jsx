@@ -5,7 +5,7 @@ export default function SkillsDashboard() {
     return (
         <section id="skills" className="section dark-bg">
             <ScrollReveal className="container">
-                <h2 className="section-title inverted">SKILLS_MATRIX</h2>
+                <h2 className="section-title">HABILIDADES</h2>
                 <div className="skills-dashboard">
 
                     {/* Fila 1: Frontend (8) + Design (4) */}
@@ -14,7 +14,7 @@ export default function SkillsDashboard() {
                     <div className="skill-module wide">
                         <div className="hologram-projection">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" className="projection-icon" alt="React" />
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" className="projection-icon" alt="JS" />
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-plain.svg" className="projection-icon" alt="JS" />
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg" className="projection-icon" alt="ThreeJS" />
                         </div>
 
@@ -24,13 +24,13 @@ export default function SkillsDashboard() {
                                     <span className="module-id">MOD_01</span>
                                     <span className="module-status">[DOM_ACTIVE]</span>
                                 </div>
-                                <h3>Frontend_Core</h3>
+                                <h3>Desarrollo Frontend</h3>
                                 <p>React 19, TailwindCSS 4, React Router 7, Vite 7, Recharts & Three.js. Arquitectura de componentes modernos.</p>
                                 <div className="progress-container">
                                     <div className="progress-bar-segment" style={{ '--target-width': '95%' }}></div>
                                 </div>
                                 <p className="font-mono" style={{ fontSize: '0.7rem', opacity: 0.6 }}>
-                                    JS (ES6+), HTML5, CSS3modules
+                                    JS (ES6+), HTML5, CSS3
                                 </p>
                             </div>
                         </div>
@@ -48,7 +48,7 @@ export default function SkillsDashboard() {
                                     <span className="module-id">MOD_02</span>
                                     <span className="module-status">[RENDER_OK]</span>
                                 </div>
-                                <h3>Design_Ops</h3>
+                                <h3>Diseño UI/UX</h3>
                                 <div className="progress-container">
                                     <div className="progress-bar-segment" style={{ '--target-width': '90%' }}></div>
                                 </div>
@@ -71,7 +71,7 @@ export default function SkillsDashboard() {
                                     <span className="module-id">MOD_03</span>
                                     <span className="module-status">[API_READY]</span>
                                 </div>
-                                <h3>Backend_Eng</h3>
+                                <h3>Ingeniería Backend</h3>
                                 <div className="progress-container">
                                     <div className="progress-bar-segment" style={{ '--target-width': '85%' }}></div>
                                 </div>
@@ -92,7 +92,7 @@ export default function SkillsDashboard() {
                                     <span className="module-id">MOD_04</span>
                                     <span className="module-status">[DEPLOYED]</span>
                                 </div>
-                                <h3>Toolchain</h3>
+                                <h3>Herramientas</h3>
                                 <div className="progress-container">
                                     <div className="progress-bar-segment" style={{ '--target-width': '88%' }}></div>
                                 </div>
@@ -113,7 +113,7 @@ export default function SkillsDashboard() {
                                     <span className="module-id">MOD_05</span>
                                     <span className="module-status">[SYS_ADMIN]</span>
                                 </div>
-                                <h3>IT_Support</h3>
+                                <h3>Soporte IT</h3>
                                 <div className="progress-container">
                                     <div className="progress-bar-segment" style={{ '--target-width': '92%' }}></div>
                                 </div>

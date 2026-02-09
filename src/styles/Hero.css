@@ -47,7 +47,7 @@ body.boot-complete .hero-content.show-element {
 
 .hero-content .subtitle {
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: clamp(0.7rem, 2vw, 1rem);
     letter-spacing: 3px;
     margin-bottom: 1rem;
     display: block;
@@ -58,12 +58,12 @@ body.boot-complete .hero-content.show-element {
     font-weight: 900;
     line-height: 0.9;
     margin-bottom: 1rem;
-    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    /* Sombras eliminadas para un estilo monocromático absoluto */
 }
 
 .hero-content .role {
     font-family: var(--font-mono);
-    font-size: 1.2rem;
+    font-size: clamp(0.85rem, 3vw, 1.2rem);
     opacity: 0.8;
 }
 

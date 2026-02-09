@@ -109,7 +109,7 @@ export default function ProjectsVault() {
         <section id="projects" className="section">
             <ScrollReveal threshold={0.01}>
                 <div className="container">
-                    <h2 className="section-title">Secure_Archives</h2>
+                    <h2 className="section-title">PROYECTOS</h2>
                 </div>
 
                 <div className="projects-vault" ref={vaultRef}>
@@ -127,8 +127,8 @@ export default function ProjectsVault() {
                                 rel={project.target ? "noopener noreferrer" : undefined}
                             >
                                 <div className="hologram-projection">
-                                    <i className={`${project.icons.main} projection-icon project-icon-large`} style={{ color: project.icons.mainColor }}></i>
-                                    <i className={`${project.icons.secondary} projection-icon project-icon-large`} style={{ color: project.icons.secondaryColor, animationDelay: '0.5s' }}></i>
+                                    <i className={`${project.icons.main} projection-icon project-icon-large`} style={{ color: '#ffffff' }}></i>
+                                    <i className={`${project.icons.secondary} projection-icon project-icon-large`} style={{ color: '#ffffff', animationDelay: '0.5s' }}></i>
                                 </div>
                                 <div className="module-inner">
                                     <div className="module-content">

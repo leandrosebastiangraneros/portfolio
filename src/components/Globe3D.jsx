@@ -112,7 +112,7 @@ export default function Globe3D() {
                 });
 
                 const continentSphere = new THREE.Mesh(
-                    new THREE.SphereGeometry(4.9, 64, 64),
+                    new THREE.SphereGeometry(4.9, isMobile ? 32 : 64, isMobile ? 32 : 64),
                     continentMaterial
                 );
                 globeGroup.add(continentSphere);
@@ -120,7 +120,7 @@ export default function Globe3D() {
         );
 
         // 2. Wireframe / Core
-        const coreGeometry = new THREE.SphereGeometry(5, 32, 32);
+        const coreGeometry = new THREE.SphereGeometry(5, isMobile ? 16 : 32, isMobile ? 16 : 32);
         const coreMaterial = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             wireframe: true,
