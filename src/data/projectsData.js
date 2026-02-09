@@ -78,7 +78,7 @@ export const projects = [
         status: "[ONLINE]",
         title: "NOVAMANAGER.sys",
         description: "Sistema integral de gestión para contratistas: Finanzas, Stock y Personal en real-time.",
-        link: "/nova/landing.html",
+        link: "https://portfolio-hazel-five-14.vercel.app/",
         target: "_blank",
         icons: {
             main: "fa-brands fa-react",
