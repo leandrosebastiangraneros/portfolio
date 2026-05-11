@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>Fortnite Latency Monitor (AWS SP)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2.1">
+</head>
+
+<body>
+    <div id="stars-canvas-container">
+        <canvas id="stars-canvas"></canvas>
+    </div>
+    <div class="atmosphere-overlay">
+        <div class="grain"></div>
+        <div class="scanlines"></div>
+    </div>
+
+    <div class="project-header-container">
+        <header class="project-header">
+            <a href="../index.html?skipBoot=true#projects" class="back-link">
+                << VOLVER A PROYECTOS</a>
+                    <div class="header-meta">PROYECTO 1 // UID: PING-MON-001</div>
+                    <h1 class="project-title">MONITOR_DE_LATENCIA_(PING)</h1>
+        </header>
+    </div>
+
+    <div class="main-layout">
+        <!-- Monitor Panel (Left) -->
+        <div class="monitor-container card-panel">
+            <div class="card-header">
+                <span class="server-label">AMAZON AWS SÃO PAULO</span>
+                <span class="status-indicator" id="connection-status">DESCONECTADO</span>
+            </div>
+
+            <div class="ping-display">
+                <span class="ping-value" id="ping-value">--</span>
+                <span class="ping-unit">ms</span>
+            </div>
+
+            <div class="ping-status-text" id="ping-text">LISTO PARA TEST</div>
+
+            <div id="grade-display" class="grade-display">--</div>
+
+            <button id="start-btn" class="start-btn">INICIAR PRUEBA</button>
+
+            <!-- Advanced Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <span class="metric-label">JITTER (ESTABILIDAD)</span>
+                    <span class="metric-value" id="jitter-value">-- ms</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">PACKET LOSS (EST)</span>
+                    <span class="metric-value">0%</span>
+                </div>
+            </div>
+
+            <!-- Live Chart Canvas -->
+            <div class="chart-container">
+                <canvas id="latency-chart" width="400" height="150"></canvas>
+            </div>
+
+            <div class="footer-info">
+                PROTOCOLO: HTTPS (CLIENT) // REGIÓN: SA-EAST-1 (BRASIL)
+            </div>
+        </div>
+
+        <!-- Info Panel (Right) -->
+        <div class="info-container card-panel">
+            <h2 class="info-title">DIAGNÓSTICO DE RED (NET-OPS)</h2>
+
+            <div class="info-block">
+                <h3>// PROTOCOLO DE MEDICIÓN (RTT)</h3>
+                <p>Este módulo ejecuta un diagnóstico de <strong>Calidad de Servicio (QoS)</strong> en tiempo real.
+                    Utiliza solicitudes asíncronas de alta frecuencia hacia la infraestructura de Amazon AWS
+                    (sa-east-1), permitiendo medir la latencia de transporte pura (Round Trip Time) eliminando el
+                    overhead de procesamiento del servidor.
+                </p>
+
+                <div class="tech-badges">
+                    <span class="tech-badge">Network Telemetry</span>
+                    <span class="tech-badge">Jitter Analysis</span>
+                    <span class="tech-badge">Real-time Visualization</span>
+                    <span class="tech-badge">Latency Benchmarking</span>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <h3>// ALGORITMO DE MEDICIÓN (ECMAScript)</h3>
+                <div class="code-window">
+                    <div class="window-header">core.js (Telemetry Loop)</div>
+                    <pre><code>async function measureNetworkMetrics() {
+    const t0 = performance.now();
+    
+    // Direct Backbone Connection Check
+    await fetch(AWS_ENDPOINT, { 
+        method: 'HEAD', 
+        cache: 'no-store', 
+        mode: 'no-cors' 
+    });
+
+    const latency = performance.now() - t0;
+    const jitter = Math.abs(latency - lastLatency);
+    
+    updateTelemetry({ 
+        rtt: latency, 
+        jitter: calculateMovingAverage(jitter) 
+    });
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

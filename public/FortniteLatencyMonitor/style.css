@@ -1,0 +1,561 @@
+:root {
+    --bg-color: #050505;
+    --primary-neon: #00f0ff;
+    /* Cyan base from Portfolio */
+    --secondary-neon: #a020f0;
+    /* Purple accent */
+    --success-color: #00ff9d;
+    --warning-color: #ffaa00;
+    --danger-color: #ff003c;
+    --text-color: #fff;
+    --font-heading: 'Space Mono', monospace;
+    --font-gamer: 'Orbitron', sans-serif;
+    --glass-bg: rgba(10, 10, 15, 0.7);
+    --glass-border: rgba(0, 240, 255, 0.15);
+}
+
+html {
+    overflow-x: hidden;
+    width: 100vw;
+}
+
+body {
+    background-color: #000;
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* --- BACKGROUND FX --- */
+#stars-canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.atmosphere-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.grain {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/Noise_600x600.png');
+    opacity: 0.03;
+    animation: grainMove 8s steps(10) infinite;
+}
+
+.scanlines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+    background-size: 100% 4px;
+    z-index: 9001;
+    pointer-events: none;
+}
+
+@keyframes grainMove {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    10% {
+        transform: translate(-5%, -10%);
+    }
+
+    20% {
+        transform: translate(-15%, 5%);
+    }
+
+    30% {
+        transform: translate(7%, -25%);
+    }
+
+    40% {
+        transform: translate(-5%, 25%);
+    }
+
+    50% {
+        transform: translate(-15%, 10%);
+    }
+
+    60% {
+        transform: translate(15%, 0%);
+    }
+
+    70% {
+        transform: translate(0%, 15%);
+    }
+
+    80% {
+        transform: translate(3%, 35%);
+    }
+
+    90% {
+        transform: translate(-10%, 10%);
+    }
+}
+
+/* --- HEADER --- */
+.project-header-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    z-index: 10;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-family: var(--font-heading);
+    color: var(--primary-neon);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--primary-neon);
+    transform: translateX(-5px);
+}
+
+.header-meta {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 0.2rem;
+    letter-spacing: 2px;
+}
+
+.project-title {
+    font-family: var(--font-gamer);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* --- MAIN LAYOUT --- */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    /* Monitor bigger than Info */
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2rem 4rem 2rem;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+/* --- HOLOGRAPHIC CARDS (Shared Styles) --- */
+.card-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    padding: 2.5rem;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+    /* TECH CORNERS CLIP PATH */
+    clip-path: polygon(20px 0, 100% 0,
+            100% calc(100% - 20px), calc(100% - 20px) 100%,
+            0 100%, 0 20px);
+}
+
+/* Animated Border Top */
+.card-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+    animation: scanlineTop 4s infinite linear;
+}
+
+@keyframes scanlineTop {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* --- MONITOR SPECIFIC --- */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.server-label {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    color: var(--primary-neon);
+    letter-spacing: 1px;
+}
+
+.status-indicator {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #666;
+    border-radius: 2px;
+}
+
+.status-indicator.connected {
+    border-color: var(--success-color);
+    color: var(--success-color);
+    box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+}
+
+.ping-display {
+    text-align: center;
+    margin: 3rem 0;
+}
+
+.ping-value {
+    font-family: var(--font-gamer);
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    display: block;
+}
+
+.ping-unit {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 2px;
+}
+
+.ping-status-text {
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    margin-bottom: 3rem;
+    color: var(--primary-neon);
+    text-transform: uppercase;
+}
+
+.grade-display {
+    display: none;
+    /* Hidden for clearer UI, or enable if requested */
+}
+
+/* Start Button */
+.start-btn {
+    display: block;
+    width: 100%;
+    padding: 1.5rem;
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid var(--primary-neon);
+    color: var(--primary-neon);
+    font-family: var(--font-gamer);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.start-btn:hover {
+    background: var(--primary-neon);
+    color: #000;
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+}
+
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: wait;
+    filter: grayscale(1);
+}
+
+/* --- METRICS & CHART --- */
+.metrics-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem 0;
+}
+
+.metric-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.metric-label {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.3rem;
+}
+
+.metric-value {
+    font-family: var(--font-gamer);
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.chart-container {
+    width: 100%;
+    height: 150px;
+    margin-top: 1rem;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+canvas#latency-chart {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.visualizer {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    height: 40px;
+    align-items: flex-end;
+    margin-top: 2rem;
+    opacity: 0.7;
+}
+
+.bar {
+    width: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    height: 5px;
+    transition: all 0.2s ease;
+}
+
+.footer-info {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+/* --- INFO PANEL SPECIFIC --- */
+.info-title {
+    font-family: var(--font-gamer);
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--primary-neon);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+.info-block {
+    margin-bottom: 2rem;
+}
+
+.info-block h3 {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: var(--primary-neon);
+    margin-bottom: 1rem;
+}
+
+.info-block p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tech-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.tech-badge {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+/* Code Window */
+.code-window {
+    background: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.window-header {
+    background: #1a1a1a;
+    padding: 5px 10px;
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: #888;
+    border-bottom: 1px solid #333;
+}
+
+pre {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+code {
+    font-family: 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: #a9b7c6;
+}
+
+/* --- RESPONSIVE IMPROVEMENTS --- */
+@media (max-width: 960px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        padding: 0 1rem 4rem 1rem;
+        /* Reduced padding */
+    }
+
+    .card-panel {
+        padding: 2rem;
+        /* Reduced internal padding */
+    }
+
+    .project-title {
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        /* More responsive title */
+    }
+}
+
+@media (max-width: 480px) {
+    .project-header-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .back-link {
+        font-size: 0.7rem;
+    }
+
+    .header-meta {
+        font-size: 0.6rem;
+    }
+
+    .project-title {
+        font-size: 1.4rem;
+        /* Smaller fixed size for very small screens or tight fluid */
+        word-break: break-word;
+        /* Prevent overflow */
+    }
+
+    .card-panel {
+        padding: 1.5rem;
+        /* Tight padding for mobile */
+    }
+
+    .ping-value {
+        font-size: 4rem;
+        /* Force smaller size so it fits */
+    }
+
+    .ping-status-text {
+        font-size: 1rem;
+    }
+
+    .metrics-grid {
+        gap: 1rem;
+    }
+
+    .metric-value {
+        font-size: 1rem;
+    }
+
+    .chart-container {
+        height: 120px;
+    }
+
+    .info-title {
+        font-size: 1.2rem;
+    }
+
+    .tech-badge {
+        font-size: 0.6rem;
+        padding: 4px 8px;
+    }
+
+    pre {
+        padding: 0.8rem;
+    }
+
+    code {
+        font-size: 0.7rem;
+    }
+}
+
+/* Helper Status Colors */
+.status-good {
+    color: var(--success-color);
+}
+
+.status-warning {
+    color: var(--warning-color);
+}
+
+.status-lag {
+    color: var(--danger-color);
+}

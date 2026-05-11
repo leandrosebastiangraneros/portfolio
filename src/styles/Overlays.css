@@ -1,0 +1,122 @@
+/* Overlays & Global Utility Components */
+
+/* --- BOOT OVERLAY --- */
+#boot-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(10, 20, 30, 0.4) 0%, var(--bg-color) 90%);
+    z-index: var(--z-boot);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.loader-container {
+    width: 300px;
+}
+
+.loader-text {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.loader-bar-bg {
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.loader-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    transition: width 0.1s linear;
+}
+
+.loader-percent {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: #888;
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
+/* --- MINI TERMINAL (Ctrl+K) --- */
+#mini-terminal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 400px;
+    background: #000;
+    border: 1px solid #fff;
+    z-index: var(--z-overlay);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.terminal-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -45%) scale(0.95) !important;
+}
+
+.terminal-header {
+    background: #fff;
+    color: #000;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 900;
+    font-family: var(--font-mono);
+    display: flex;
+    justify-content: space-between;
+}
+
+.terminal-body {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.terminal-input-line {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    outline: none;
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    #mini-terminal {
+        width: 95vw;
+        height: 60vh;
+    }
+}
