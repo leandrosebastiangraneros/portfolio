@@ -57,6 +57,11 @@ export default function Globe3D() {
         controls.rotateSpeed = 0.5;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 0.8; // Slightly slower for elegance
+        controls.mouseButtons = {
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: null,
+            RIGHT: null
+        };
 
         // FIX: Prioritize page scroll on mobile
         // Desactivamos la interacción táctil directa en el canvas para que no robe el scroll
@@ -65,6 +70,9 @@ export default function Globe3D() {
             controls.enabled = false;
             renderer.domElement.style.pointerEvents = 'none'; // Passthrough touch events
         }
+
+        // Prevent context menu on right click
+        renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // Groups
         const globeGroup = new THREE.Group();
